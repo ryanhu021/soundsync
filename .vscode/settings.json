@@ -1,0 +1,11 @@
+{
+  "eslint.workingDirectories": [
+    "./packages/backend",
+    "./packages/frontend",
+  ],
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  } 
+}
