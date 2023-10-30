@@ -16,7 +16,7 @@ const SongSchema = new Schema<Song>(
       required: false,
     },
   },
-  { collection: "song" }
+  { collection: "songs" }
 );
 
 export const Song = model<Song>("Song", SongSchema);
