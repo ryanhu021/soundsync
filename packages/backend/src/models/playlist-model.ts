@@ -4,7 +4,7 @@ export interface Playlist extends Document {
   name: string;
   creator: Types.ObjectId;
   dateCreated: Date;
-  songs: [string];
+  songs: [Types.ObjectId];
 }
 
 const PlaylistSchema = new Schema<Playlist>(
@@ -20,8 +20,8 @@ const PlaylistSchema = new Schema<Playlist>(
     dateCreated: Date.now(),
     songs: [
       {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: "Song",
       },
     ],
   },
