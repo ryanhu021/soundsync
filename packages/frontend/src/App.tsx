@@ -1,23 +1,32 @@
 import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
+import ErrorPage from "./error-page";
+import Root from "./routes/root";
+import Playlists from "./routes/playlists";
+import Playlist from "./routes/playlist";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <RouterProvider
+      router={createBrowserRouter([
+        {
+          path: "/",
+          element: <Root />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/playlists",
+          element: <Playlists />,
+          errorElement: <ErrorPage />,
+        },
+        {
+          path: "/playlist",
+          element: <Playlist />,
+          errorElement: <ErrorPage />,
+        },
+      ])}
+    />
   );
 }
 
