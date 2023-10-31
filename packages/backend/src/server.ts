@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-app.use("/users", userRouter);
+app.use("/user", userRouter);
 
 //running the server
 app.listen(process.env.PORT, () => {
