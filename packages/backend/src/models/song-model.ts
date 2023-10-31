@@ -1,17 +1,27 @@
 import { Document, Schema, model } from "mongoose";
 
 export interface Song extends Document {
-  spotifyId: string;
-  soundCloudId: string;
+  name: string;
+  artist: string;
+  album: string;
+  providerUrl: string;
 }
 
 const SongSchema = new Schema<Song>(
   {
-    spotifyId: {
+    name: {
       type: String,
-      required: false,
+      required: true,
     },
-    soundCloudId: {
+    artist: {
+      type: String,
+      required: true,
+    },
+    album: {
+      type: String,
+      required: true,
+    },
+    providerUrl: {
       type: String,
       required: false,
     },
