@@ -5,24 +5,28 @@ import ErrorPage from "./error-page";
 import Root from "./views/home";
 import Playlists from "./views/playlists";
 import Playlist from "./views/playlist";
+import NavigationBar from "./components/navigationbar";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Root />} errorElement={<ErrorPage />} />
-        <Route
-          path="/playlists"
-          element={<Playlists />}
-          errorElement={<ErrorPage />}
-        />
-        <Route
-          path="/playlist"
-          element={<Playlist />}
-          errorElement={<ErrorPage />}
-        />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <NavigationBar />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Root />} errorElement={<ErrorPage />} />
+          <Route
+            path="/playlists"
+            element={<Playlists />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/playlist"
+            element={<Playlist />}
+            errorElement={<ErrorPage />}
+          />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
