@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
 import userRouter from "./routes/user-routes";
+import { AuthRequest, auth } from "./util/auth";
 
 const app = express();
 
@@ -26,6 +27,10 @@ mongoose
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
+});
+
+app.get("/test-auth", auth, (req: AuthRequest, res) => {
+  res.send({ user: req.user });
 });
 
 app.use("/user", userRouter);
