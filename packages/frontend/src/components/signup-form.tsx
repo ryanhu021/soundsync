@@ -7,14 +7,10 @@ function SignUpForm() {
   return (
     <Form>
       <Floatinglabel className="mb-3" label="Name" controlId="floatingInput">
-        <Form.Control type="name" placeholder="Enter Name" />
+        <Form.Control type="name" placeholder="Name" />
       </Floatinglabel>
-      <Floatinglabel
-        className="mb-3"
-        label="Enter Email"
-        controlId="floatingInput"
-      >
-        <Form.Control type="email" placeholder="Enter email" />
+      <Floatinglabel className="mb-3" label="Email" controlId="floatingInput">
+        <Form.Control type="email" placeholder="Email" />
       </Floatinglabel>
       <Floatinglabel
         className="mb-3"

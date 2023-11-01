@@ -8,12 +8,8 @@ import Col from "react-bootstrap/Col";
 function LoginForm() {
   return (
     <Form>
-      <Floatinglabel
-        className="mb-3"
-        label="Enter Email"
-        controlId="floatingInput"
-      >
-        <Form.Control type="email" placeholder="Enter email" />
+      <Floatinglabel className="mb-3" label="Email" controlId="floatingInput">
+        <Form.Control type="email" placeholder="Email" />
       </Floatinglabel>
       <Floatinglabel
         className="mb-3"
