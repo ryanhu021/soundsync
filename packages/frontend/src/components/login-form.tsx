@@ -23,9 +23,7 @@ function LoginForm() {
       </Form.Group>
       <Row>
         <Col>
-          <Button variant="primary" type="submit">
-            Create Account
-          </Button>
+          <Button variant="primary">Create Account</Button>
         </Col>
         <Col>
           <Button variant="primary" type="submit">
