@@ -6,12 +6,15 @@ import Floatinglabel from "react-bootstrap/FloatingLabel";
 function SignUpForm() {
   return (
     <Form>
+      <Floatinglabel className="mb-3" label="Name" controlId="floatingInput">
+        <Form.Control type="name" placeholder="Enter Name" />
+      </Floatinglabel>
       <Floatinglabel
         className="mb-3"
-        label="Enter Username"
+        label="Enter Email"
         controlId="floatingInput"
       >
-        <Form.Control type="username" placeholder="Enter Username" />
+        <Form.Control type="email" placeholder="Enter email" />
       </Floatinglabel>
       <Floatinglabel
         className="mb-3"

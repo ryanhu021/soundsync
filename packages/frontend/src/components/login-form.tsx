@@ -10,10 +10,10 @@ function LoginForm() {
     <Form>
       <Floatinglabel
         className="mb-3"
-        label="Enter Username"
+        label="Enter Email"
         controlId="floatingInput"
       >
-        <Form.Control type="username" placeholder="Enter Username" />
+        <Form.Control type="email" placeholder="Enter email" />
       </Floatinglabel>
       <Floatinglabel
         className="mb-3"
