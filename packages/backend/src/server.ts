@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import "dotenv/config";
+import userRouter from "./routes/user-routes";
+import { AuthRequest, auth } from "./util/auth";
 
 const app = express();
 
@@ -23,12 +25,17 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((error) => console.log(error));
 
-//GET endpoints
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+app.get("/test-auth", auth, (req: AuthRequest, res) => {
+  res.send({ user: req.user });
+});
+
+app.use("/user", userRouter);
+
 //running the server
 app.listen(process.env.PORT, () => {
-  console.log(`Example app listening on port ${process.env.PORT}`);
+  console.log(`App listening on port ${process.env.PORT}`);
 });
