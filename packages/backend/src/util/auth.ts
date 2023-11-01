@@ -2,11 +2,15 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { User } from "../models/user-model";
 
-interface UserToken {
-  id: string;
-}
+type UserToken = {
+  _id: string;
+};
 
-type UserContext = Omit<User, "password">;
+export type UserContext = {
+  _id: string;
+  name: string;
+  email: string;
+};
 
 export interface AuthRequest extends Request {
   user?: UserContext;
@@ -35,11 +39,11 @@ export const auth = async (
   try {
     const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    if (!(decoded as UserToken).id) {
+    if (!(decoded as UserToken)._id) {
       return res.status(401).send({ error: "Unauthorized" });
     }
     const user = await User.findById(
-      (decoded as UserToken).id,
+      (decoded as UserToken)._id,
       "-password -__v"
     );
     if (!user) {
