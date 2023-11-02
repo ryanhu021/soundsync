@@ -2,7 +2,8 @@ import React from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-//<img> src={`${process.env.PUBLIC_URL}/images/logo192.png`} </img>
+//<img> src={`${process.env.PUBLIC_URL}/images/sslogo.png`} </img>
+//<img> src={"/packages/frontend/public/sslogo.png"}</img>
 
 function SSNavbar() {
   return (
@@ -10,7 +11,7 @@ function SSNavbar() {
       <Container>
         <Link to="/">
           <Navbar.Brand>
-            <img> src={`${process.env.PUBLIC_URL}/images/sslogo.png`} </img>
+            <img src="/packages/frontend/public/sslogo.png"></img>
           </Navbar.Brand>
         </Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav"></Navbar.Toggle>

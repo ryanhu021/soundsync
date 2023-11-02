@@ -4,7 +4,7 @@ import React from "react";
 export default function Playlist() {
   return (
     <>
-      <h1>Playlist Page</h1>
+      <h1>Create Playlist Page</h1>
     </>
   );
 }
