@@ -1,13 +1,12 @@
 import React from "react";
-import SignUpForm from "../components/signup-form";
-import LoginForm from "../components/login-form";
+import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
     <>
       <h1>Home</h1>
-      <SignUpForm />
-      <LoginForm />
+      <Link to="/signup">Sign up</Link>
+      <Link to="/login">Login</Link>
     </>
   );
 }
