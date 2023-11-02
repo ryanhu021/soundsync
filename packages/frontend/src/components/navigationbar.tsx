@@ -3,18 +3,25 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 
 function NavigationBar() {
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
-        <Navbar.Brand href="/">SoundSync</Navbar.Brand>
+        <Link to="/">
+          <Navbar.Brand>SoundSync</Navbar.Brand>
+        </Link>
         <Nav className="mr-auto">
-          <Nav.Link href="/playlists">
-            <Button>View Playlists</Button>
+          <Nav.Link>
+            <Link to="/playlists">
+              <Button>View Playlists</Button>
+            </Link>
           </Nav.Link>
           <Nav.Link href="/playlist">
-            <Button>New Playlists</Button>
+            <Link to="/playlist">
+              <Button>New Playlist</Button>
+            </Link>
           </Nav.Link>
         </Nav>
       </Container>
