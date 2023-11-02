@@ -8,12 +8,13 @@ import Playlist from "./views/playlist";
 import NavigationBar from "./components/navigationbar";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
+import SSNavbar from "./components/navbar";
 
 function App() {
   return (
     <>
       <BrowserRouter>
-        <NavigationBar />
+        <SSNavbar />
         <Routes>
           <Route path="/" element={<Root />} errorElement={<ErrorPage />} />
           <Route

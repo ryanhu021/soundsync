@@ -1,18 +1,36 @@
 import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
+
+//<img> src={`${process.env.PUBLIC_URL}/images/logo192.png`} </img>
 
 function SSNavbar() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
       <Container>
-        <Navbar.Brand href="#home">
-          <img> src={`${process.env.PUBLIC_URL}/images/`} </img>
-        </Navbar.Brand>
+        <Link to="/">
+          <Navbar.Brand>
+            <img> src={`${process.env.PUBLIC_URL}/images/sslogo.png`} </img>
+          </Navbar.Brand>
+        </Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav"></Navbar.Toggle>
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav>
-            <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/playlists">Playlists</Nav.Link>
+            <Nav.Link>
+              <Link to="/playlists">
+                <Button>View Playlists</Button>
+              </Link>
+            </Nav.Link>
+            <Nav.Link>
+              <Link to="/login">
+                <Button>Login</Button>
+              </Link>
+            </Nav.Link>
+            <Nav.Link>
+              <Link to="/signup">
+                <Button>Sign Up</Button>
+              </Link>
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
