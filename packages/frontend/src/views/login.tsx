@@ -3,9 +3,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Floatinglabel from "react-bootstrap/FloatingLabel";
 import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 type Inputs = {
   email: string;
@@ -15,9 +15,32 @@ type Inputs = {
 
 function LoginForm() {
   const { register, handleSubmit } = useForm<Inputs>();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [cookies, setCookie] = useCookies(["user", "token"]);
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/user/login`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const json = await res.json();
+          setCookie("user", json.user, { path: "/" });
+          setCookie("token", json.token, { path: "/" });
+          navigate("/", { replace: true });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -49,14 +72,12 @@ function LoginForm() {
           ></Form.Check>
         </Form.Group>
         <Row>
-          <Col>
-            <Button variant="primary">Create Account</Button>
-          </Col>
-          <Col>
-            <Button variant="primary" type="submit">
-              Login
-            </Button>
-          </Col>
+          <Button variant="primary" type="submit">
+            Login
+          </Button>
+        </Row>
+        <Row>
+          <Link to="/signup">Create Account</Link>
         </Row>
       </Form>
     </div>
