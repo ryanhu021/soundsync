@@ -11,7 +11,7 @@ function SSNavbar() {
       <Container>
         <Link to="/">
           <Navbar.Brand>
-            <img src="/packages/frontend/public/sslogo.png"></img>
+            <img src="sslogo.png" width={85} height={85}></img>
           </Navbar.Brand>
         </Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav"></Navbar.Toggle>
