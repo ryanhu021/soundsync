@@ -5,16 +5,16 @@ import ErrorPage from "./views/error-page";
 import Root from "./views/home";
 import Playlists from "./views/playlists";
 import Playlist from "./views/playlist";
-import NavigationBar from "./components/navigationbar";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
+import SSNavbar from "./components/navbar";
 import { CookiesProvider } from "react-cookie";
 
 function App() {
   return (
     <CookiesProvider>
       <BrowserRouter>
-        <NavigationBar />
+        <SSNavbar />
         <Routes>
           <Route path="/" element={<Root />} errorElement={<ErrorPage />} />
           <Route
