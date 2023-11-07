@@ -2,9 +2,6 @@ import React from "react";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-//<img> src={`${process.env.PUBLIC_URL}/images/sslogo.png`} </img>
-//<img> src={"/packages/frontend/public/sslogo.png"}</img>
-
 function SSNavbar() {
   return (
     <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
