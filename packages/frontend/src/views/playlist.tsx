@@ -1,7 +1,7 @@
 import React from "react";
 import { Container } from "react-bootstrap";
 // import { useCookies } from "react-cookie";
-// import { Link } from "react-router-dom";
+import SearchBar from "../components/searchbar";
 
 export default function Playlist() {
   // const [cookies] = useCookies(["user", "token"]);
@@ -22,6 +22,7 @@ export default function Playlist() {
           {/* {cookies.user.username} */}
         </Container>
       </body>
+      <SearchBar />
     </div>
   );
 }
