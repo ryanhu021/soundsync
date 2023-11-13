@@ -4,10 +4,17 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import userRouter from "./routes/user-routes";
 import { AuthRequest, auth } from "./util/auth";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static("public"));
 

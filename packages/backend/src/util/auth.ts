@@ -30,15 +30,14 @@ export const auth = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (!req.headers.authorization) {
+  if (!req.cookies || !req.cookies.token) {
     return res.status(401).send({ error: "Unauthorized" });
   }
   if (!process.env.JWT_SECRET) {
     return res.status(500).send({ error: "JWT secret not set" });
   }
   try {
-    const token = req.headers.authorization.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(req.cookies.token, process.env.JWT_SECRET);
     if (!(decoded as UserToken)._id) {
       return res.status(401).send({ error: "Unauthorized" });
     }
