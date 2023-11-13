@@ -8,11 +8,11 @@ import Playlist from "./views/playlist";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
 import SSNavbar from "./components/navbar";
-import { CookiesProvider } from "react-cookie";
+import { AuthProvider } from "./auth/auth";
 
 function App() {
   return (
-    <CookiesProvider>
+    <AuthProvider>
       <BrowserRouter>
         <SSNavbar />
         <Routes>
@@ -39,7 +39,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </CookiesProvider>
+    </AuthProvider>
   );
 }
 
