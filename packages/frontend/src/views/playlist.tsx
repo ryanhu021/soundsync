@@ -28,9 +28,7 @@ export default function Playlist() {
                 aria-describedby="submit"
               />
             </Form>
-            <Button onClick={handleSubmit}>
-              <p>Submit</p>
-            </Button>
+            <Button onClick={handleSubmit}>Submit</Button>
             <h3>Add Songs</h3>
             <h3>Export</h3>
           </Container>
