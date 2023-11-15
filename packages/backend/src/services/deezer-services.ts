@@ -7,22 +7,33 @@ type Song = {
   providerUrl: string;
 };
 
+function extractTrackIdFromDeezerUrl(url: string) {
+  // Define a regular expression to match the track ID in the URL
+  const regex = /\/track\/(\d+)/;
+
+  // Use the regular expression to extract the track ID
+  const match = url.match(regex);
+
+  // Check if there is a match and return the track ID or null
+  return match ? match[1] : null;
+}
+
 async function getRedirectLink(url: string) {
   try {
     const response = await axios.get(url);
     const finalUrl = response.request.res.responseUrl;
-    //Work!
-    console.log(finalUrl);
     return finalUrl;
   } catch (error) {
     console.error("Axios Redirect Follow Error:", error);
   }
 }
 
-export async function deezerUrlSearch(id: string): Promise<Song> {
+export async function deezerUrlSearch(url: string): Promise<Song> {
   try {
+    const share_url = await getRedirectLink(url);
+    const id = extractTrackIdFromDeezerUrl(share_url);
+
     const providerUrl = `https://api.deezer.com/track/${id}`;
-    await getRedirectLink("https://deezer.page.link/d9CYwVtTXCo2rMms5");
     const response = await axios.get(providerUrl, {
       params: {
         apikey: process.env.DEEZER_KEY,

@@ -4,7 +4,7 @@ import { deezerUrlSearch } from "../services/deezer-services";
 const router = express.Router();
 
 router.get("/url", async (req, res) => {
-  const query = req.query.id as string;
+  const query = req.query.url as string;
 
   try {
     const track = await deezerUrlSearch(query);
