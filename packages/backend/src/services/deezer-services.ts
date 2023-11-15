@@ -11,6 +11,7 @@ async function getRedirectLink(url: string) {
   try {
     const response = await axios.get(url);
     const finalUrl = response.request.res.responseUrl;
+    //Work!
     console.log(finalUrl);
     return finalUrl;
   } catch (error) {
