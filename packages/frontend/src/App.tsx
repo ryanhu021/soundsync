@@ -2,29 +2,43 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import ErrorPage from "./views/error-page";
-import Root from "./views/home";
+import Home from "./views/home";
 import Playlists from "./views/playlists";
-import Playlist from "./views/playlist";
+import CreatePlaylist from "./views/playlist";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
 import SSNavbar from "./components/navbar";
-import { CookiesProvider } from "react-cookie";
+import { AuthProvider } from "./auth/auth-provider";
+import { ProtectedRoute } from "./auth/protected-route";
 
 function App() {
   return (
-    <CookiesProvider>
+    <AuthProvider>
       <BrowserRouter>
         <SSNavbar />
         <Routes>
-          <Route path="/" element={<Root />} errorElement={<ErrorPage />} />
+          <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
           <Route
             path="/playlists"
-            element={<Playlists />}
+            element={
+              <ProtectedRoute>
+                <Playlists />
+              </ProtectedRoute>
+            }
             errorElement={<ErrorPage />}
           />
           <Route
-            path="/playlist"
-            element={<Playlist />}
+            path="/playlists/create"
+            element={
+              <ProtectedRoute>
+                <CreatePlaylist />
+              </ProtectedRoute>
+            }
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/playlists/view/:id"
+            element={<p>TODO: view playlist</p>}
             errorElement={<ErrorPage />}
           />
           <Route
@@ -39,7 +53,7 @@ function App() {
           />
         </Routes>
       </BrowserRouter>
-    </CookiesProvider>
+    </AuthProvider>
   );
 }
 

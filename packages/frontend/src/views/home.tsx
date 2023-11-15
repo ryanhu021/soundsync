@@ -1,26 +1,21 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import { useCookies } from "react-cookie";
+import { useAuth } from "../auth/auth-provider";
 
 export default function Home() {
-  const [cookies] = useCookies(["user", "token"]);
+  const authContext = useAuth();
 
   return (
     <div>
       <header>
         <h1>Home</h1>
-        <h2>Welcome to SoundSync</h2>
+        <h2>
+          Welcome to SoundSync, {authContext.name ? authContext.name : "Guest"}!
+        </h2>
         <p>Your most convenient playlist manager!</p>
-        {cookies.user && cookies.token && (
-          <>
-            <h2>Welcome {cookies.user.name}</h2>
-            <p>{cookies.user.email}</p>
-            <p>{cookies.token}</p>
-          </>
-        )}
         <div>
-          <Link to="/playlist">
+          <Link to="/playlists/create">
             <Button>Create A New Playlist</Button>
           </Link>
           <Link to="/playlists">
