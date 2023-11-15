@@ -8,14 +8,21 @@ type Song = {
 };
 
 function extractTrackIdFromDeezerUrl(url: string) {
-  // Define a regular expression to match the track ID in the URL
-  const regex = /\/track\/(\d+)/;
+  try {
+    const urlObj = new URL(url);
+    const pathSegments: string[] = urlObj.pathname.split("/");
 
-  // Use the regular expression to extract the track ID
-  const match = url.match(regex);
+    // Find the index of "track" in the path
+    const trackIndex: number = pathSegments.indexOf("track");
 
-  // Check if there is a match and return the track ID or null
-  return match ? match[1] : null;
+    // Return the track ID if "track" is found in the path
+    return trackIndex !== -1 && pathSegments.length > trackIndex + 1
+      ? pathSegments[trackIndex + 1]
+      : null;
+  } catch (error) {
+    console.error("Error parsing URL:", error);
+    return null;
+  }
 }
 
 async function getRedirectLink(url: string) {
@@ -32,7 +39,6 @@ export async function deezerUrlSearch(url: string): Promise<Song> {
   try {
     const share_url = await getRedirectLink(url);
     const id = extractTrackIdFromDeezerUrl(share_url);
-
     const providerUrl = `https://api.deezer.com/track/${id}`;
     const response = await axios.get(providerUrl, {
       params: {
@@ -44,7 +50,7 @@ export async function deezerUrlSearch(url: string): Promise<Song> {
       name: response.data.title,
       artist: response.data.artist.name,
       album: response.data.album.title,
-      providerUrl: providerUrl,
+      providerUrl: `https://deezer.com/track/${id}`,
     };
 
     return track;
