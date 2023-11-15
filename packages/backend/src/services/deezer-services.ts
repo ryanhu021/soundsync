@@ -7,16 +7,16 @@ type Song = {
   providerUrl: string;
 };
 
-async function getRedirectLink(url: string) {
-  try {
-    const response = await axios.get(url);
-    const finalUrl = response.request.res.responseUrl;
+// async function getRedirectLink(url: string) {
+//   try {
+//     const response = await axios.get(url);
+//     const finalUrl = response.request.res.responseUrl;
 
-    return finalUrl;
-  } catch (error) {
-    console.error("Axios Redirect Follow Error:", error);
-  }
-}
+//     return finalUrl;
+//   } catch (error) {
+//     console.error("Axios Redirect Follow Error:", error);
+//   }
+// }
 
 export async function deezerUrlSearch(id: string): Promise<Song> {
   try {
