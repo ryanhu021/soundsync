@@ -1,11 +1,8 @@
 import React from "react";
 import { Container } from "react-bootstrap";
-// import { useCookies } from "react-cookie";
 import SearchBar from "../components/searchbar";
 
-export default function Playlist() {
-  // const [cookies] = useCookies(["user", "token"]);
-
+export default function CreatePlaylist() {
   return (
     <div>
       <header>
@@ -19,7 +16,6 @@ export default function Playlist() {
       <body>
         <Container>
           <h4>Songs</h4>
-          {/* {cookies.user.username} */}
         </Container>
       </body>
       <SearchBar />
