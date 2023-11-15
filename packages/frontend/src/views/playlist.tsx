@@ -8,6 +8,7 @@ export default function CreatePlaylist() {
 
   const handleSubmit = () => {
     console.log(playlistName);
+    setPlaylistName("");
   };
   return (
     <div>
