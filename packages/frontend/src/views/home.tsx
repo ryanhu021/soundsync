@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
-import { useAuth } from "../auth/auth";
+import { useAuth } from "../auth/auth-provider";
 
 export default function Home() {
   const authContext = useAuth();
@@ -15,7 +15,7 @@ export default function Home() {
         </h2>
         <p>Your most convenient playlist manager!</p>
         <div>
-          <Link to="/playlist">
+          <Link to="/playlists/create">
             <Button>Create A New Playlist</Button>
           </Link>
           <Link to="/playlists">
