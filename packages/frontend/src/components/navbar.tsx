@@ -11,11 +11,7 @@ function SSNavbar() {
       method: "POST",
       credentials: "include",
     })
-      .then(async (res) => {
-        if (res.status === 200) {
-          window.location.href = "/";
-        }
-      })
+      .then(async (res) => res.status === 200 && (window.location.href = "/"))
       .catch((err) => console.log(err));
   };
 
