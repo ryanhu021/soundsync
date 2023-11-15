@@ -7,8 +7,6 @@ export const ProtectedRoute: React.FunctionComponent<
 > = ({ children }): JSX.Element => {
   const { name } = useAuth();
 
-  console.log(name, !name);
-
   if (!name) {
     return <Navigate to="/login" replace />;
   }
