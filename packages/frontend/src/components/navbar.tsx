@@ -42,11 +42,7 @@ function SSNavbar() {
                 <Button>Sign Up</Button>
               </Link>
             </Nav.Link>
-            <Nav.Link>
-              <Link to="/signup">
-                <Button onClick={handleSubmit}>Logout</Button>
-              </Link>
-            </Nav.Link>
+            <Button onClick={handleSubmit}>Logout</Button>
           </Nav>
         </Navbar.Collapse>
       </Container>
