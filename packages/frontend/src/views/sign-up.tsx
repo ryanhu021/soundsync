@@ -35,7 +35,7 @@ function SignUpForm() {
         "Content-Type": "application/json",
       },
     })
-      .then(async (res) => res.status === 200 && (window.location.href = "/"))
+      .then(async (res) => res.status === 201 && (window.location.href = "/"))
       .catch((err) => {
         console.log(err);
       });
