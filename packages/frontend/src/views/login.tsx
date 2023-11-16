@@ -5,7 +5,6 @@ import Floatinglabel from "react-bootstrap/FloatingLabel";
 import Row from "react-bootstrap/Row";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 
 type Inputs = {
   email: string;
@@ -16,7 +15,6 @@ type Inputs = {
 function LoginForm() {
   const { register, handleSubmit } = useForm<Inputs>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [cookies, setCookie] = useCookies(["user", "token"]);
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
@@ -26,18 +24,12 @@ function LoginForm() {
         email: data.email,
         password: data.password,
       }),
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
     })
-      .then(async (res) => {
-        if (res.status === 200) {
-          const json = await res.json();
-          setCookie("user", json.user, { path: "/" });
-          setCookie("token", json.token, { path: "/" });
-          navigate("/", { replace: true });
-        }
-      })
+      .then(async (res) => res.status === 200 && (window.location.href = "/"))
       .catch((err) => {
         console.log(err);
       });
@@ -64,13 +56,6 @@ function LoginForm() {
             {...register("password")}
           />
         </Floatinglabel>
-        <Form.Group className="mb-3" controlId="formBasicCheckbox">
-          <Form.Check
-            type="checkbox"
-            label="Remember Me"
-            {...register("checkbox")}
-          ></Form.Check>
-        </Form.Group>
         <Row>
           <Button variant="primary" type="submit">
             Login
