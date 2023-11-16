@@ -20,7 +20,7 @@ router.post("/url", async (req, res) => {
   } else if (testIfValidSpotifyLink(req.body.url)) {
     //Enter Spotify URL Search Function
   } else {
-    res.status(400).send("Invalid Link");
+    res.status(400).send(req.body.url);
   }
 });
 
