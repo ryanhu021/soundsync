@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Floatinglabel from "react-bootstrap/FloatingLabel";
@@ -16,8 +16,10 @@ function LoginForm() {
   const { register, handleSubmit } = useForm<Inputs>();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setErrorMessage("");
     fetch(`${process.env.REACT_APP_SERVER_URL}/user/login`, {
       method: "POST",
       body: JSON.stringify({
@@ -29,7 +31,13 @@ function LoginForm() {
         "Content-Type": "application/json",
       },
     })
-      .then(async (res) => res.status === 200 && (window.location.href = "/"))
+      .then(async (res) => {
+        if (res.status === 200) {
+          window.location.href = "/";
+        } else {
+          console.log(res.statusText);
+        }
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -37,7 +45,9 @@ function LoginForm() {
 
   return (
     <div>
-      <Link to="/">Back to Home</Link>
+      <Link to="/">
+        <Button>Back to Home</Button>
+      </Link>
       <h1>Login Page</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Floatinglabel className="mb-3" label="Email">
@@ -56,6 +66,7 @@ function LoginForm() {
             {...register("password")}
           />
         </Floatinglabel>
+        <p>{errorMessage}</p>
         <Row>
           <Button variant="primary" type="submit">
             Login
