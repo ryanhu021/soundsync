@@ -36,6 +36,7 @@ function LoginForm() {
           window.location.href = "/";
         } else {
           console.log(res.statusText);
+          setErrorMessage("User Not Found, Create an Account!");
         }
       })
       .catch((err) => {
@@ -73,7 +74,11 @@ function LoginForm() {
           </Button>
         </Row>
         <Row>
-          <Link to="/signup">Create Account</Link>
+          <Link to="/signup">
+            <Button variant="primary" type="submit">
+              Create Account
+            </Button>
+          </Link>
         </Row>
       </Form>
     </div>
