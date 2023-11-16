@@ -36,7 +36,7 @@ function LoginForm() {
           window.location.href = "/";
         } else {
           console.log(res.statusText);
-          setErrorMessage("User Not Found, Create an Account!");
+          setErrorMessage("Invalid email and/or password");
         }
       })
       .catch((err) => {
@@ -46,9 +46,7 @@ function LoginForm() {
 
   return (
     <div>
-      <Link to="/">
-        <Button>Back to Home</Button>
-      </Link>
+      <Link to="/">Back to Home</Link>
       <h1>Login Page</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Floatinglabel className="mb-3" label="Email">
