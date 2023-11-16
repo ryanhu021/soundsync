@@ -10,6 +10,24 @@ function SearchBar() {
   const { register, handleSubmit } = useForm<Inputs>();
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     console.log(data);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/search/url`, {
+      method: "POST",
+      body: JSON.stringify({
+        url: data.url,
+      }),
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          console.log(res);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <Container className="mt-5">

@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import "dotenv/config";
 import userRouter from "./routes/user-routes";
 import { AuthRequest, auth } from "./util/auth";
+import songRouter from "./routes/song-routes";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -42,6 +43,8 @@ app.get("/test-auth", auth, (req: AuthRequest, res) => {
 });
 
 app.use("/user", userRouter);
+
+app.use("/search", songRouter);
 
 //running the server
 app.listen(process.env.PORT, () => {
