@@ -72,11 +72,7 @@ function LoginForm() {
           </Button>
         </Row>
         <Row>
-          <Link to="/signup">
-            <Button variant="primary" type="submit">
-              Create Account
-            </Button>
-          </Link>
+          <Link to="/signup">Create Account</Link>
         </Row>
       </Form>
     </div>
