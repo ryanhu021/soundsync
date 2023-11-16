@@ -3,15 +3,10 @@ import { deezerUrlSearch } from "../services/deezer-services";
 
 const router = express.Router();
 
-router.get("/url", async (req, res) => {
-  const query = req.query.url as string;
-
-  try {
-    const track = await deezerUrlSearch(query);
-    res.json(track);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+router.post("/url", async (req, res) => {
+  deezerUrlSearch(req.body.url)
+    .then((result) => res.status(200).send(result))
+    .catch((error) => res.status(500).send({ error }));
 });
 
 export default router;
