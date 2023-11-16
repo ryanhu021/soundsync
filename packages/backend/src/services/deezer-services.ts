@@ -7,40 +7,31 @@ type Song = {
   providerUrl: string;
 };
 
-function extractTrackIdFromDeezerUrl(url: string) {
-  try {
-    const urlObj = new URL(url);
-    const pathSegments: string[] = urlObj.pathname.split("/");
+const extractTrackIdFromDeezerUrl = (url: string): string | null => {
+  const urlObj = new URL(url);
+  const pathSegments: string[] = urlObj.pathname.split("/");
 
-    // Find the index of "track" in the path
-    const trackIndex: number = pathSegments.indexOf("track");
+  // Find the index of "track" in the path
+  const trackIndex: number = pathSegments.indexOf("track");
 
-    // Return the track ID if "track" is found in the path
-    return trackIndex !== -1 && pathSegments.length > trackIndex + 1
-      ? pathSegments[trackIndex + 1]
-      : null;
-  } catch (error) {
-    console.error("Error parsing URL:", error);
-    return null;
-  }
-}
+  // Return the track ID if "track" is found in the path
+  return trackIndex !== -1 && pathSegments.length > trackIndex + 1
+    ? pathSegments[trackIndex + 1]
+    : null;
+};
 
-async function getRedirectLink(url: string) {
-  try {
-    const response = await axios.get(url);
-    const finalUrl = response.request.res.responseUrl;
-    return finalUrl;
-  } catch (error) {
-    console.error("Axios Redirect Follow Error:", error);
-  }
-}
+const getRedirectLink = async (url: string): Promise<string> => {
+  const response = await axios.get(url);
+  // Return redirect URL
+  const finalUrl = response.request.res.responseUrl;
+  return finalUrl;
+};
 
-export async function deezerUrlSearch(url: string): Promise<Song> {
+export const deezerUrlSearch = async (url: string): Promise<Song> => {
   try {
     const share_url = await getRedirectLink(url);
     const id = extractTrackIdFromDeezerUrl(share_url);
-    const providerUrl = `https://api.deezer.com/track/${id}`;
-    const response = await axios.get(providerUrl, {
+    const response = await axios.get(`https://api.deezer.com/track/${id}`, {
       params: {
         apikey: process.env.DEEZER_KEY,
       },
@@ -58,34 +49,4 @@ export async function deezerUrlSearch(url: string): Promise<Song> {
     console.error("Error Searching for songs:", error);
     throw error;
   }
-}
-
-// export async function deezerSearch(
-//   title: string,
-//   artist: string
-// ): Promise<DeezerTrack> {
-//   try {
-//     const response = await axios.get(
-//       `https://api.deezer.com/search/track?q="Smack That (Clean) Akon"`,
-//       {
-//         params: {
-//           apikey: process.env.DEEZER_API_KEY,
-//         },
-//       }
-//     );
-
-//     const track: DeezerTrack = {
-//       id: response.data.id,
-//       title: response.data.title,
-//       artist: response.data.artist.name,
-//       album: {
-//         title: response.data.album.title,
-//         picture: response.data.album.picture,
-//       },
-//     };
-//     return track;
-//   } catch (error: unknown) {
-//     console.error("Error Searching for songs:", error);
-//     throw error;
-//   }
-// }
+};
