@@ -17,7 +17,7 @@ const PlaylistSchema = new Schema<Playlist>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    dateCreated: Date.now(),
+    dateCreated: { type: Date, default: Date.now() },
     songs: [
       {
         type: Schema.Types.ObjectId,
