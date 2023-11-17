@@ -1,6 +1,6 @@
 import axios from "axios";
 
-type Song = {
+type Track = {
   name: string;
   artist: string;
   album: string;
@@ -27,7 +27,7 @@ const getRedirectLink = async (url: string): Promise<string> => {
   return finalUrl;
 };
 
-export const deezerUrlSearch = async (url: string): Promise<Song> => {
+export const deezerUrlSearch = async (url: string): Promise<Track> => {
   try {
     const share_url = await getRedirectLink(url);
     const id = extractTrackIdFromDeezerUrl(share_url);
@@ -37,7 +37,7 @@ export const deezerUrlSearch = async (url: string): Promise<Song> => {
       },
     });
 
-    const track: Song = {
+    const track: Track = {
       name: response.data.title,
       artist: response.data.artist.name,
       album: response.data.album.title,
