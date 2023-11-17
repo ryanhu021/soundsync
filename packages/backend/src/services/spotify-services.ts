@@ -1,6 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-node";
 
-type Song = {
+export type Track = {
   name: string;
   artist: string;
   album: string;
@@ -22,7 +22,7 @@ const getSongIdFromUrl = (url: string): string | null => {
   return null;
 };
 
-export const spotifySongFetch = async (url: string): Promise<Song> => {
+export const spotifySongFetch = async (url: string): Promise<Track> => {
   const data = await spotifyApi.clientCredentialsGrant();
   spotifyApi.setAccessToken(data.body["access_token"]);
 
@@ -32,9 +32,9 @@ export const spotifySongFetch = async (url: string): Promise<Song> => {
       const trackInfo = await spotifyApi.getTrack(songId);
       const songData = trackInfo.body;
 
-      const track: Song = {
+      const track: Track = {
         name: songData.name,
-        artist: songData.artists.map((artist) => artist.name).join(", "),
+        artist: songData.artists[0].name,
         album: songData.album.name,
         providerUrl: `https://open.spotify.com/track/${songId}`,
       };
