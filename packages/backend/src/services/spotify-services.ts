@@ -1,4 +1,4 @@
-import SpotifyWebApi from 'spotify-web-api-node';
+import SpotifyWebApi from "spotify-web-api-node";
 
 type Song = {
   name: string;
@@ -8,14 +8,14 @@ type Song = {
 };
 
 const spotifyApi = new SpotifyWebApi({
-  clientId: process.env.SPOTIFY_CLIENT_ID || '',
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
+  clientId: process.env.SPOTIFY_CLIENT_ID || "",
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
 });
 
-// Function to extract song ID from Spotify URL 
+// Function to extract song ID from Spotify URL
 const getSongIdFromUrl = (url: string): string | null => {
-  const parts = url.split('/');
-  const trackIdIndex = parts.indexOf('track');
+  const parts = url.split("/");
+  const trackIdIndex = parts.indexOf("track");
   if (trackIdIndex !== -1 && trackIdIndex < parts.length - 1) {
     return parts[trackIdIndex + 1];
   }
@@ -24,7 +24,7 @@ const getSongIdFromUrl = (url: string): string | null => {
 
 export const spotifySongFetch = async (url: string): Promise<Song> => {
   const data = await spotifyApi.clientCredentialsGrant();
-  spotifyApi.setAccessToken(data.body['access_token']);
+  spotifyApi.setAccessToken(data.body["access_token"]);
 
   const songId = getSongIdFromUrl(url);
   if (songId) {
@@ -34,18 +34,18 @@ export const spotifySongFetch = async (url: string): Promise<Song> => {
 
       const track: Song = {
         name: songData.name,
-        artist: songData.artists.map(artist => artist.name).join(', '),
+        artist: songData.artists.map((artist) => artist.name).join(", "),
         album: songData.album.name,
         providerUrl: `https://open.spotify.com/track/${songId}`,
       };
 
       return track;
     } catch (error) {
-      console.error('Error searching for songs:', error);
+      console.error("Error searching for songs:", error);
       throw error;
     }
   } else {
-    console.error('Unable to find song ID in URL');
-    throw new Error('Invalid Spotify URL');
+    console.error("Unable to find song ID in URL");
+    throw new Error("Invalid Spotify URL");
   }
 };
