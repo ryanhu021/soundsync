@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Container, Button } from "react-bootstrap";
+import { Navbar, Nav, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useAuth } from "../auth/auth-provider";
 
@@ -16,42 +16,49 @@ function SSNavbar() {
   };
 
   return (
-    <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
-      <Container>
-        <Link to="/">
-          <Navbar.Brand>
-            <img src="sslogo.png" width={85} height={85}></img>
-          </Navbar.Brand>
-        </Link>
-        <Navbar.Toggle aria-controls="responsive-navbar-nav"></Navbar.Toggle>
-        <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav>
+    <Navbar
+      collapseOnSelect
+      expand="lg"
+      bg="dark"
+      variant="dark"
+      className="justify-content-between"
+    >
+      <Link to="/">
+        <Navbar.Brand>
+          <img src="sslogo.png" width={85} height={85}></img>
+        </Navbar.Brand>
+      </Link>
+      <Navbar.Toggle aria-controls="responsive-navbar-nav"></Navbar.Toggle>
+      <Navbar.Collapse
+        id="responsive-navbar-nav"
+        className="justify-content-end"
+      >
+        <Nav>
+          <Nav.Link>
+            <Link to="/playlists">
+              <Button>View Playlists</Button>
+            </Link>
+          </Nav.Link>
+          {user.name ? (
             <Nav.Link>
-              <Link to="/playlists">
-                <Button>View Playlists</Button>
-              </Link>
+              <Button onClick={logout}>Log out</Button>
             </Nav.Link>
-            {user.name ? (
+          ) : (
+            <>
               <Nav.Link>
-                <Button onClick={logout}>Log out</Button>
+                <Link to="/login">
+                  <Button>Log in</Button>
+                </Link>
               </Nav.Link>
-            ) : (
-              <>
-                <Nav.Link>
-                  <Link to="/login">
-                    <Button>Log in</Button>
-                  </Link>
-                </Nav.Link>
-                <Nav.Link>
-                  <Link to="/signup">
-                    <Button>Sign Up</Button>
-                  </Link>
-                </Nav.Link>
-              </>
-            )}
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
+              <Nav.Link>
+                <Link to="/signup">
+                  <Button>Sign Up</Button>
+                </Link>
+              </Nav.Link>
+            </>
+          )}
+        </Nav>
+      </Navbar.Collapse>
     </Navbar>
   );
 }
