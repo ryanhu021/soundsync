@@ -4,15 +4,13 @@ import { Button } from "react-bootstrap";
 import { useAuth } from "../auth/auth-provider";
 
 export default function Home() {
-  const authContext = useAuth();
+  const { user } = useAuth();
 
   return (
     <div>
       <header>
         <h1>Home</h1>
-        <h2>
-          Welcome to SoundSync, {authContext.name ? authContext.name : "Guest"}!
-        </h2>
+        <h2>Welcome to SoundSync, {user.name ? user.name : "Guest"}!</h2>
         <p>Your most convenient playlist manager!</p>
         <div>
           <Link to="/playlists/create">

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../auth/auth-provider";
 
 function SSNavbar() {
-  const authContext = useAuth();
+  const { user } = useAuth();
 
   const logout = () => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/user/logout`, {
@@ -39,7 +39,7 @@ function SSNavbar() {
               <Button>View Playlists</Button>
             </Link>
           </Nav.Link>
-          {authContext.name ? (
+          {user.name ? (
             <Nav.Link>
               <Button onClick={logout}>Log out</Button>
             </Nav.Link>

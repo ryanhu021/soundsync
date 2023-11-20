@@ -1,13 +1,21 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 
-export type AuthContext = {
+type UserContext = {
   name: string;
   email: string;
 };
 
+export type AuthContext = {
+  user: UserContext;
+  loading: boolean;
+};
+
 export const AuthContext = createContext<AuthContext>({
-  name: "",
-  email: "",
+  user: {
+    name: "",
+    email: "",
+  },
+  loading: true,
 });
 
 export const AuthProvider: React.FunctionComponent<React.PropsWithChildren> = ({
@@ -15,6 +23,7 @@ export const AuthProvider: React.FunctionComponent<React.PropsWithChildren> = ({
 }): JSX.Element => {
   const [name, setName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/user/check-auth`, {
@@ -25,14 +34,18 @@ export const AuthProvider: React.FunctionComponent<React.PropsWithChildren> = ({
           const json = await res.json();
           setName(json.user.name);
           setEmail(json.user.email);
+          setLoading(false);
         }
       })
       .catch((err) => console.log(err));
   }, []);
 
   const contextValue = {
-    name,
-    email,
+    user: {
+      name,
+      email,
+    },
+    loading,
   };
 
   return (
