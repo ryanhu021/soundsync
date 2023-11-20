@@ -7,7 +7,7 @@ export const ProtectedRoute: React.FunctionComponent<
   React.PropsWithChildren
 > = ({ children }): JSX.Element => {
   const { user, loading } = useAuth();
-
+  
   return loading ? (
     <Spinner />
   ) : user.name ? (
