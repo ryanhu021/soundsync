@@ -20,8 +20,8 @@ const getSong = async (result: Track): Promise<Song> => {
   if ((song = await Song.findOne({ providerUrl: result.providerUrl }))) {
     return song;
   } else {
-    const { name, artist, album, providerUrl } = result;
-    song = new Song({ name, artist, album, providerUrl });
+    const { name, artist, album, providerUrl, imageUrl } = result;
+    song = new Song({ name, artist, album, providerUrl, imageUrl });
     const newSong = await song.save();
     return newSong;
   }

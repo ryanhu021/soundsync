@@ -29,8 +29,8 @@ router.get("/playlists/:id", async (req, res) => {
 // Create a new playlist
 router.post("/playlists", async (req, res) => {
   try {
-    const { name, creator, songs } = req.body;
-    const playlist = new Playlist({ name, creator, songs });
+    const { name, creator, songs, imageUrl } = req.body;
+    const playlist = new Playlist({ name, creator, songs, imageUrl });
     const newPlaylist = await playlist.save();
     res.status(201).json(newPlaylist);
   } catch (error) {
@@ -41,10 +41,10 @@ router.post("/playlists", async (req, res) => {
 // Update a playlist by ID
 router.put("/playlists/:id", async (req, res) => {
   try {
-    const { name, creator, songs } = req.body;
+    const { name, creator, songs, imageUrl } = req.body;
     const updatedPlaylist = await Playlist.findByIdAndUpdate(
       req.params.id,
-      { name, creator, songs },
+      { name, creator, songs, imageUrl },
       { new: true }
     );
     if (!updatedPlaylist) {
