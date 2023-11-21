@@ -15,7 +15,7 @@ function SongCard(props: Song) {
   return (
     <Card
       style={{
-        width: "80%",
+        width: "100%",
         height: "5rem",
       }}
     >
