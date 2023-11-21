@@ -68,6 +68,9 @@ export default function Playlists() {
   ]);
 
   const deletePlaylist = (index: number) => {
+    //fetch request for removing playlist from user's playlists goes in here
+
+    //update the playlists state
     const updatedSongs = [...playlists];
     updatedSongs.splice(index, 1);
     setPlaylists(updatedSongs);
