@@ -34,27 +34,22 @@ function SSNavbar() {
         className="justify-content-end"
       >
         <Nav>
-          <Nav.Link>
-            <Link to="/playlists">
-              <Button>View Playlists</Button>
-            </Link>
-          </Nav.Link>
+          <Link to="/playlists">
+            <Button>View Playlists</Button>
+          </Link>
+          <Link to="/playlists/create">
+            <Button>Create Playlists</Button>
+          </Link>
           {user.name ? (
-            <Nav.Link>
-              <Button onClick={logout}>Log out</Button>
-            </Nav.Link>
+            <Button onClick={logout}>Log out</Button>
           ) : (
             <>
-              <Nav.Link>
-                <Link to="/login">
-                  <Button>Log in</Button>
-                </Link>
-              </Nav.Link>
-              <Nav.Link>
-                <Link to="/signup">
-                  <Button>Sign Up</Button>
-                </Link>
-              </Nav.Link>
+              <Link to="/login">
+                <Button>Log in</Button>
+              </Link>
+              <Link to="/signup">
+                <Button>Sign Up</Button>
+              </Link>
             </>
           )}
         </Nav>

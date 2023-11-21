@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 type Inputs = {
@@ -8,8 +8,8 @@ type Inputs = {
 
 function SearchBar() {
   const { register, handleSubmit } = useForm<Inputs>();
+
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data);
     fetch(`${process.env.REACT_APP_SERVER_URL}/search/url`, {
       method: "POST",
       body: JSON.stringify({
@@ -20,7 +20,7 @@ function SearchBar() {
         "Content-Type": "application/json",
       },
     })
-      .then(async (res) => {
+      .then((res) => {
         if (res.status === 200) {
           console.log(res);
         }
@@ -29,28 +29,24 @@ function SearchBar() {
         console.log(err);
       });
   };
+
   return (
-    <Container className="mt-5">
-      <Row>
-        <Col sm={4}>
-          <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
-            <Form.Control
-              type="search"
-              placeholder="Enter Song URL"
-              className="me-2 rounded-pill"
-              aria-label="Search"
-              {...register("url")}
-            />
-            <Button
-              className="rounded-pill"
-              variant="outline-primary"
-              type="submit"
-            >
-              Search
-            </Button>
-          </Form>
-        </Col>
-      </Row>
+    <Container>
+      <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
+        <Form.Control
+          type="search"
+          placeholder="Enter Song URL"
+          className="me-2 rounded-pill"
+          {...register("url")}
+        />
+        <Button
+          className="rounded-pill"
+          variant="outline-primary"
+          type="submit"
+        >
+          Search
+        </Button>
+      </Form>
     </Container>
   );
 }
