@@ -3,7 +3,6 @@ import { deezerUrlSearch } from "../services/deezer-services";
 import { spotifyAuthUrl, spotifySongFetch } from "../services/spotify-services";
 import { Song } from "../models/song-model";
 import { Track } from "../services/spotify-services";
-import { AuthRequest, auth } from "../util/auth";
 
 const router = express.Router();
 
