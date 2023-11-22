@@ -2,10 +2,11 @@ import express from "express";
 import { Playlist } from "../models/playlist-model";
 import { AuthRequest, auth } from "../util/auth";
 import { User } from "../models/user-model";
+import { Song } from "../models/song-model";
 
 const router = express.Router();
 
-// Get all playlists
+// Get all playlists for user
 router.get("/", auth, async (req: AuthRequest, res) => {
   try {
     const playlists = await Playlist.find({ creator: req.user?._id });
@@ -31,7 +32,7 @@ router.get("/:id", async (req, res) => {
 // Create a new playlist
 router.post("/", auth, async (req: AuthRequest, res) => {
   try {
-    const { name, imageUrl } = req.body;
+    const { name } = req.body;
     const creator = req.user?._id;
     const creatorName = req.user?.name;
 
@@ -41,7 +42,6 @@ router.post("/", auth, async (req: AuthRequest, res) => {
       creator,
       creatorName,
       songs: [],
-      imageUrl,
     });
     const newPlaylist = await playlist.save();
 
@@ -61,10 +61,18 @@ router.post("/", auth, async (req: AuthRequest, res) => {
 // Update a playlist by ID
 router.put("/:id", auth, async (req: AuthRequest, res) => {
   try {
-    const { name, songs, imageUrl } = req.body;
+    const { name, songs } = req.body;
+
+    // get first song for image url
+    const firstSong = await Song.findOne({ _id: songs[0] });
+    if (!firstSong) {
+      return res.status(404).send({ error: "Error updating playlist" });
+    }
+
+    // update playlist
     const updatedPlaylist = await Playlist.findByIdAndUpdate(
       req.params.id,
-      { name, songs, imageUrl },
+      { name, songs, imageUrl: firstSong.imageUrl },
       { new: true }
     );
     if (!updatedPlaylist) {

@@ -32,7 +32,7 @@ const PlaylistSchema = new Schema<Playlist>(
     ],
     imageUrl: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   { collection: "playlists" }

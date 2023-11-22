@@ -17,7 +17,11 @@ function PlaylistCard(props: PlaylistCardProps) {
               to={`/playlists/view/${props._id}`}
               style={{ textDecoration: "none", padding: "0.2rem" }}
             >
-              <Card.Img variant="top" src={props.imageURL} alt={props.name} />
+              <Card.Img
+                variant="top"
+                src={props.imageUrl || "/empty_playlist_icon.png"}
+                alt={props.name}
+              />
             </Link>
           </Row>
           <Row>

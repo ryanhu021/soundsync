@@ -10,7 +10,7 @@ export interface Playlist {
   creator: string;
   creatorName: string;
   dateCreated: string;
-  imageURL: string;
+  imageUrl: string;
   songs: string[];
 }
 
@@ -45,6 +45,7 @@ export default function Playlists() {
 
   const deletePlaylist = (index: number) => {
     if (window.confirm("Are you sure you want to delete this playlist?")) {
+      setLoading(true);
       fetch(
         `${process.env.REACT_APP_SERVER_URL}/playlist/${playlists[index]._id}`,
         {
@@ -64,10 +65,12 @@ export default function Playlists() {
           } else {
             setError("Error deleting playlist");
           }
+          setLoading(false);
         })
         .catch((err) => {
           console.log(err);
           setError("Internal server error");
+          setLoading(false);
         });
     }
   };

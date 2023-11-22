@@ -31,7 +31,7 @@ export default function ViewPlaylist() {
     creator: "",
     creatorName: "",
     dateCreated: "",
-    imageURL: "",
+    imageUrl: "",
     songs: [],
   });
   const [songs, setSongs] = useState<Song[]>([]);

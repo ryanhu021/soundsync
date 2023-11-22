@@ -19,7 +19,7 @@ export default function CreatePlaylist() {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({ name: data.name, imageUrl: "test" }),
+      body: JSON.stringify({ name: data.name }),
     })
       .then(async (res) => {
         if (res.status === 201) {
