@@ -6,5 +6,5 @@ export default function SpotifyCallback() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("code");
-  return <p>{token}</p>;
+  return <p>{token! + user.name}</p>;
 }
