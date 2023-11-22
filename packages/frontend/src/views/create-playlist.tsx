@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
   name: string;
@@ -8,9 +9,30 @@ type Inputs = {
 
 export default function CreatePlaylist() {
   const { register, handleSubmit } = useForm<Inputs>();
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    console.log(data.name);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/playlist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ name: data.name, imageUrl: "test" }),
+    })
+      .then(async (res) => {
+        if (res.status === 201) {
+          const playlist = await res.json();
+          navigate(`/playlists/view/${playlist._id}`);
+        } else {
+          setError("Error creating playlist");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Internal server error");
+      });
   };
 
   return (
@@ -24,14 +46,11 @@ export default function CreatePlaylist() {
           placeholder="Enter Playlist Name"
           aria-describedby="submit"
         />
-        <Button
-          type="submit"
-          className="rounded-pill"
-          variant="outline-primary"
-        >
+        <Button type="submit" className="rounded-pill">
           Submit
         </Button>
       </Form>
+      <p>{error}</p>
     </Container>
   );
 }

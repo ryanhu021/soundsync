@@ -1,23 +1,20 @@
 import React from "react";
 import { Card, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Playlist } from "../views/playlists";
 
-interface Playlist {
-  name: string;
-  creator: string;
-  dateCreated: string;
-  imageURL: string;
+interface PlaylistCardProps extends Playlist {
   onDelete: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-function PlaylistCard(props: Playlist) {
+function PlaylistCard(props: PlaylistCardProps) {
   return (
     <div>
       <Card style={{ width: "10rem", height: "16.5rem" }}>
         <Card.Body>
           <Row>
             <Link
-              to={props.imageURL}
+              to={`/playlists/view/${props._id}`}
               style={{ textDecoration: "none", padding: "0.2rem" }}
             >
               <Card.Img variant="top" src={props.imageURL} alt={props.name} />

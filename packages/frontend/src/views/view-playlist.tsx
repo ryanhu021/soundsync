@@ -1,12 +1,15 @@
-import React, { useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Container, Form, Button, Spinner } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import SearchBar from "../components/searchbar";
 import SongCard from "../components/song-card";
 import SpotifyExport from "../components/spotify-export";
 import { useAuth } from "../auth/auth-provider";
+import { Playlist } from "./playlists";
+import { useParams } from "react-router-dom";
 
-interface Song {
+export interface Song {
+  _id: string;
   name: string;
   artist: string;
   album: string;
@@ -20,60 +23,158 @@ type Inputs = {
 
 export default function ViewPlaylist() {
   const { user } = useAuth();
+  const { id } = useParams();
   const { register, handleSubmit } = useForm<Inputs>();
-  const [playlistName, setPlaylistName] = useState("New Playlist");
+  const [playlist, setPlaylist] = useState<Playlist>({
+    _id: "",
+    name: "",
+    creator: "",
+    creatorName: "",
+    dateCreated: "",
+    imageURL: "",
+    songs: [],
+  });
+  const [songs, setSongs] = useState<Song[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  //Replace with playlist songs from the database
-  const [songs, setSongs] = useState([
-    {
-      name: "1",
-      artist: "me",
-      album: "SOS",
-      providerUrl:
-        "https://open.spotify.com/track/2V9AMx6KfrGcfBMjuPhP6u?si=a17b64e6a6d9499d",
-      imageUrl: "https://api.deezer.com/album/302127/image",
-    },
-    {
-      name: "2",
-      artist: "me",
-      album: "SOS",
-      providerUrl:
-        "https://open.spotify.com/track/2V9AMx6KfrGcfBMjuPhP6u?si=a17b64e6a6d9499d",
-      imageUrl: "https://api.deezer.com/album/93341322/image",
-    },
-    {
-      name: "3",
-      artist: "me",
-      album: "SOS",
-      providerUrl:
-        "https://open.spotify.com/track/2V9AMx6KfrGcfBMjuPhP6u?si=a17b64e6a6d9499d",
-      imageUrl:
-        "https://i.scdn.co/image/ab67616d0000b273ae936137924268701ee507b4",
-    },
-  ]);
+  const getSong = async (id: string) => {
+    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/song/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res && res.status === 200) {
+      return await res.json();
+    } else {
+      setError("Error getting songs");
+    }
+  };
+
+  const getSongs = async (ids: string[]) =>
+    await Promise.all(ids.map((id) => getSong(id)));
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/playlist/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const playlist = await res.json();
+          setSongs(await getSongs(playlist.songs));
+          setPlaylist(playlist);
+        } else {
+          setError("Error getting playlist");
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Internal server error");
+        setLoading(false);
+      });
+  }, []);
+
+  const addSong = (song: Song) => {
+    setLoading(true);
+    const updatedSongs = [...songs, song];
+    fetch(`${process.env.REACT_APP_SERVER_URL}/playlist/${playlist._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ songs: updatedSongs }),
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const updated = await res.json();
+          setSongs(await getSongs(updated.songs));
+          setPlaylist(updated);
+        } else {
+          setError("Error adding song");
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Internal server error");
+        setLoading(false);
+      });
+  };
 
   const deleteSong = (index: number) => {
-    //fetch request for removing song from playlist goes in here
-
-    //update the playlist state
+    setLoading(true);
     const updatedSongs = [...songs];
     updatedSongs.splice(index, 1);
-    setSongs(updatedSongs);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/playlist/${playlist._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ songs: updatedSongs }),
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const updated = await res.json();
+          setPlaylist(updated);
+          setSongs(await getSongs(updated.songs));
+        } else {
+          setError("Error deleting song");
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Internal server error");
+        setLoading(false);
+      });
   };
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    setPlaylistName(data.name);
+  const rename: SubmitHandler<Inputs> = (data) => {
+    setLoading(true);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/playlist/${playlist._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ name: data.name }),
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const updated = await res.json();
+          setPlaylist(updated);
+        } else {
+          setError("Error renaming playlist");
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Internal server error");
+        setLoading(false);
+      });
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <Container>
-      <h1>{playlistName}</h1>
-      {user.name && (
-        <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
+      <h1>{playlist.name}</h1>
+      {playlist.creatorName === user.name && (
+        <Form className="d-flex" onSubmit={handleSubmit(rename)}>
           <Form.Control
             type="name"
             className="me-2 rounded-pill"
-            defaultValue={playlistName}
+            defaultValue={playlist.name}
             {...register("name")}
             placeholder="Enter Playlist Name"
             aria-describedby="submit"
@@ -83,32 +184,26 @@ export default function ViewPlaylist() {
             className="rounded-pill"
             variant="outline-primary"
           >
-            Update
+            Rename
           </Button>
         </Form>
       )}
-      <p>By Creator name</p>
+      <strong>By: {playlist.creatorName}</strong>
+      <p>{new Date(playlist.dateCreated).toLocaleDateString()}</p>
       <SpotifyExport />
-      {user.name && (
+      {playlist.creatorName === user.name && (
         <div>
           <h3>Add Songs</h3>
-          <SearchBar />
+          <SearchBar onSongFetched={addSong} />
         </div>
       )}
       <div>
         <h4>Songs</h4>
         {songs.map((song: Song, index: number) => (
-          <SongCard
-            key={index}
-            name={song.name}
-            album={song.album}
-            artist={song.artist}
-            imageURL={song.imageUrl}
-            songURL={song.providerUrl}
-            onDelete={() => deleteSong(index)}
-          />
+          <SongCard key={index} onDelete={() => deleteSong(index)} {...song} />
         ))}
       </div>
+      <p>{error}</p>
     </Container>
   );
 }

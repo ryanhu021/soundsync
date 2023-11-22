@@ -1,80 +1,80 @@
-import React, { useState } from "react";
-import { CardGroup, Container } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { CardGroup, Container, Spinner } from "react-bootstrap";
 import PlaylistCard from "../components/playlist-card";
 import AddPlaylistCard from "../components/add-playlist-card";
 import { useAuth } from "../auth/auth-provider";
 
-interface Playlist {
+export interface Playlist {
+  _id: string;
   name: string;
   creator: string;
+  creatorName: string;
   dateCreated: string;
   imageURL: string;
+  songs: string[];
 }
 
 export default function Playlists() {
   const { user } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [playlists, setPlaylists] = useState<Playlist[]>([]);
 
-  //Replace with user playlists from the database
-  const [playlists, setPlaylists] = useState([
-    {
-      name: "1",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-    {
-      name: "2",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-    {
-      name: "3",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-    {
-      name: "4",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-    {
-      name: "5",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-    {
-      name: "6",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-    {
-      name: "7",
-      creator: "me",
-      dateCreated: "",
-      imageURL:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
-    },
-  ]);
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/playlist`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const playlists = await res.json();
+          setPlaylists(playlists);
+        } else {
+          setError("Error getting playlists");
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError("Internal server error");
+      });
+  }, []);
 
   const deletePlaylist = (index: number) => {
-    //fetch request for removing playlist from user's playlists goes in here
-
-    //update the playlists state
-    const updatedSongs = [...playlists];
-    updatedSongs.splice(index, 1);
-    setPlaylists(updatedSongs);
+    if (window.confirm("Are you sure you want to delete this playlist?")) {
+      fetch(
+        `${process.env.REACT_APP_SERVER_URL}/playlist/${playlists[index]._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      )
+        .then(async (res) => {
+          if (res.status === 204) {
+            //update the playlists state
+            const updatedPlaylists = [...playlists];
+            updatedPlaylists.splice(index, 1);
+            setPlaylists(updatedPlaylists);
+          } else {
+            setError("Error deleting playlist");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          setError("Internal server error");
+        });
+    }
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <Container>
@@ -97,15 +97,13 @@ export default function Playlists() {
           {playlists.map((playlist: Playlist, index: number) => (
             <PlaylistCard
               key={index}
-              name={playlist.name}
-              creator={playlist.creator}
-              dateCreated={playlist.dateCreated}
-              imageURL={playlist.imageURL}
               onDelete={() => deletePlaylist(index)}
+              {...playlist}
             />
           ))}
         </CardGroup>
       </div>
+      <p>{error}</p>
     </Container>
   );
 }
