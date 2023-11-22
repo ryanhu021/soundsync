@@ -28,8 +28,7 @@ export default function CreatePlaylist() {
       album: "SOS",
       providerUrl:
         "https://open.spotify.com/track/2V9AMx6KfrGcfBMjuPhP6u?si=a17b64e6a6d9499d",
-      imageUrl:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+      imageUrl: "https://api.deezer.com/album/302127/image",
     },
     {
       name: "2",
@@ -37,8 +36,7 @@ export default function CreatePlaylist() {
       album: "SOS",
       providerUrl:
         "https://open.spotify.com/track/2V9AMx6KfrGcfBMjuPhP6u?si=a17b64e6a6d9499d",
-      imageUrl:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+      imageUrl: "https://api.deezer.com/album/93341322/image",
     },
     {
       name: "3",
@@ -47,7 +45,7 @@ export default function CreatePlaylist() {
       providerUrl:
         "https://open.spotify.com/track/2V9AMx6KfrGcfBMjuPhP6u?si=a17b64e6a6d9499d",
       imageUrl:
-        "https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228",
+        "https://i.scdn.co/image/ab67616d0000b273ae936137924268701ee507b4",
     },
   ]);
 

@@ -5,6 +5,7 @@ export type Track = {
   artist: string;
   album: string;
   providerUrl: string;
+  imageUrl: string;
 };
 
 const spotifyApi = new SpotifyWebApi({
@@ -37,6 +38,7 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
         artist: songData.artists[0].name,
         album: songData.album.name,
         providerUrl: `https://open.spotify.com/track/${songId}`,
+        imageUrl: songData.album.images[0].url,
       };
 
       return track;

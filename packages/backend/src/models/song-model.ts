@@ -5,6 +5,7 @@ export interface Song extends Document {
   artist: string;
   album: string;
   providerUrl: string;
+  imageUrl: string;
 }
 
 const SongSchema = new Schema<Song>(
@@ -23,7 +24,11 @@ const SongSchema = new Schema<Song>(
     },
     providerUrl: {
       type: String,
-      required: false,
+      required: true,
+    },
+    imageUrl: {
+      type: String,
+      required: true,
     },
   },
   { collection: "songs" }

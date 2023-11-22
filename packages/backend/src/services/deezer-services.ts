@@ -5,6 +5,7 @@ type Track = {
   artist: string;
   album: string;
   providerUrl: string;
+  imageUrl: string;
 };
 
 const extractTrackIdFromDeezerUrl = (url: string): string | null => {
@@ -42,6 +43,7 @@ export const deezerUrlSearch = async (url: string): Promise<Track> => {
       artist: response.data.artist.name,
       album: response.data.album.title,
       providerUrl: `https://deezer.com/track/${id}`,
+      imageUrl: response.data.album.cover,
     };
 
     return track;

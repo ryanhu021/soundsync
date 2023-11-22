@@ -4,6 +4,7 @@ export interface Playlist extends Document {
   name: string;
   creator: Types.ObjectId;
   dateCreated: Date;
+  imageUrl: string;
   songs: [Types.ObjectId];
 }
 
@@ -24,6 +25,10 @@ const PlaylistSchema = new Schema<Playlist>(
         ref: "Song",
       },
     ],
+    imageUrl: {
+      type: String,
+      required: true,
+    },
   },
   { collection: "playlists" }
 );
