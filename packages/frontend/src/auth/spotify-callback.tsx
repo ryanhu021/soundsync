@@ -1,7 +1,10 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
+import { useAuth } from "./auth-provider";
 
 export default function SpotifyCallback() {
+  const { user } = useAuth();
   const [searchParams] = useSearchParams();
-  return <p>{searchParams.get("code")}</p>;
+  const token = searchParams.get("code");
+  return <p>{token}</p>;
 }

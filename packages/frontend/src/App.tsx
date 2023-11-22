@@ -4,13 +4,14 @@ import "./App.css";
 import ErrorPage from "./views/error-page";
 import Home from "./views/home";
 import Playlists from "./views/playlists";
-import CreatePlaylist from "./views/playlist";
+import CreatePlaylist from "./views/create-playlist";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
 import SSNavbar from "./components/navbar";
 import { AuthProvider } from "./auth/auth-provider";
 import { ProtectedRoute } from "./auth/protected-route";
 import SpotifyCallback from "./auth/spotify-callback";
+import ViewPlaylist from "./views/view-playlist";
 
 function App() {
   return (
@@ -39,7 +40,7 @@ function App() {
           />
           <Route
             path="/playlists/view/:id"
-            element={<p>TODO: view playlist</p>}
+            element={<ViewPlaylist />}
             errorElement={<ErrorPage />}
           />
           <Route
@@ -54,7 +55,11 @@ function App() {
           />
           <Route
             path="/auth/spotify/callback"
-            element={<SpotifyCallback />}
+            element={
+              <ProtectedRoute>
+                <SpotifyCallback />
+              </ProtectedRoute>
+            }
             errorElement={<ErrorPage />}
           />
         </Routes>

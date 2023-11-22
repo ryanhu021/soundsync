@@ -3,6 +3,8 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import SearchBar from "../components/searchbar";
 import SongCard from "../components/song-card";
+import SpotifyExport from "../components/spotify-export";
+import { useAuth } from "../auth/auth-provider";
 
 interface Song {
   name: string;
@@ -16,7 +18,8 @@ type Inputs = {
   name: string;
 };
 
-export default function CreatePlaylist() {
+export default function ViewPlaylist() {
+  const { user } = useAuth();
   const { register, handleSubmit } = useForm<Inputs>();
   const [playlistName, setPlaylistName] = useState("New Playlist");
 
@@ -63,14 +66,14 @@ export default function CreatePlaylist() {
   };
 
   return (
-    <div>
-      <h1>Create Playlist</h1>
-      <Container>
-        <h3>{playlistName}</h3>
+    <Container>
+      <h1>{playlistName}</h1>
+      {user.name && (
         <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
           <Form.Control
             type="name"
             className="me-2 rounded-pill"
+            defaultValue={playlistName}
             {...register("name")}
             placeholder="Enter Playlist Name"
             aria-describedby="submit"
@@ -80,18 +83,19 @@ export default function CreatePlaylist() {
             className="rounded-pill"
             variant="outline-primary"
           >
-            Submit
+            Update
           </Button>
         </Form>
-      </Container>
-      <Container>
-        <h3>Export</h3>
-      </Container>
-      <Container>
-        <h3>Add Songs</h3>
-        <SearchBar />
-      </Container>
-      <Container>
+      )}
+      <p>By Creator name</p>
+      <SpotifyExport />
+      {user.name && (
+        <div>
+          <h3>Add Songs</h3>
+          <SearchBar />
+        </div>
+      )}
+      <div>
         <h4>Songs</h4>
         {songs.map((song: Song, index: number) => (
           <SongCard
@@ -104,7 +108,7 @@ export default function CreatePlaylist() {
             onDelete={() => deleteSong(index)}
           />
         ))}
-      </Container>
-    </div>
+      </div>
+    </Container>
   );
 }

@@ -20,7 +20,6 @@ export default function Home() {
           <Link to="/playlists">
             <Button>View Playlists</Button>
           </Link>
-          {user.name && <SpotifyExport />}
         </div>
       </header>
       <footer>

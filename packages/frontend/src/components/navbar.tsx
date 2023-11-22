@@ -38,7 +38,7 @@ function SSNavbar() {
             <Button>View Playlists</Button>
           </Link>
           <Link to="/playlists/create">
-            <Button>Create Playlists</Button>
+            <Button>Create Playlist</Button>
           </Link>
           {user.name ? (
             <Button onClick={logout}>Log out</Button>
