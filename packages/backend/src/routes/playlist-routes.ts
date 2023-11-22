@@ -47,9 +47,6 @@ router.post("/", auth, async (req: AuthRequest, res) => {
 
     // add playlist to user
     const user = await User.findById(creator);
-    if (!user) {
-      return res.status(404).send({ error: "User not found" });
-    }
     user.playlists.push(newPlaylist._id);
     await user.save();
     res.status(201).json(newPlaylist);
