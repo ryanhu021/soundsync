@@ -8,7 +8,12 @@ export type Track = {
   imageUrl: string;
 };
 
+const scopes = ["playlist-modify-public", "playlist-modify-private"];
+const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
+const state = "soundsync-state";
+
 const spotifyApi = new SpotifyWebApi({
+  redirectUri,
   clientId: process.env.SPOTIFY_CLIENT_ID || "",
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
 });
@@ -50,4 +55,8 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
     console.error("Unable to find song ID in URL");
     throw new Error("Invalid Spotify URL");
   }
+};
+
+export const spotifyAuthUrl = (): string => {
+  return spotifyApi.createAuthorizeURL(scopes, state);
 };

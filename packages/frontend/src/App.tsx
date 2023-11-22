@@ -10,6 +10,7 @@ import LoginForm from "./views/login";
 import SSNavbar from "./components/navbar";
 import { AuthProvider } from "./auth/auth-provider";
 import { ProtectedRoute } from "./auth/protected-route";
+import SpotifyCallback from "./auth/spotify-callback";
 
 function App() {
   return (
@@ -49,6 +50,11 @@ function App() {
           <Route
             path="/signup"
             element={<SignUpForm />}
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/auth/spotify/callback"
+            element={<SpotifyCallback />}
             errorElement={<ErrorPage />}
           />
         </Routes>

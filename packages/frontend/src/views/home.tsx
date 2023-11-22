@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { useAuth } from "../auth/auth-provider";
+import SpotifyExport from "../components/spotify-export";
 
 export default function Home() {
   const { user } = useAuth();
@@ -19,6 +20,7 @@ export default function Home() {
           <Link to="/playlists">
             <Button>View Playlists</Button>
           </Link>
+          {user.name && <SpotifyExport />}
         </div>
       </header>
       <footer>

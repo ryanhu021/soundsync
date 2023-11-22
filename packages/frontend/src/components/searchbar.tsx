@@ -10,7 +10,8 @@ function SearchBar() {
   const { register, handleSubmit } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/search/url`, {
+    console.log(data);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/song/url`, {
       method: "POST",
       body: JSON.stringify({
         url: data.url,
