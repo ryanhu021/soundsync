@@ -47,6 +47,9 @@ router.post("/", auth, async (req: AuthRequest, res) => {
 
     // add playlist to user
     const user = await User.findById(creator);
+    if (!user) {
+      return res.status(404).send({ error: "User not found" });
+    }
     user.playlists.push(newPlaylist._id);
     await user.save();
     res.status(201).json(newPlaylist);
@@ -60,6 +63,17 @@ router.put("/:id", auth, async (req: AuthRequest, res) => {
   try {
     const { name, songs } = req.body;
 
+    // check if playlist exists
+    const playlist = await Playlist.findById(req.params.id);
+    if (!playlist) {
+      return res.status(404).send({ error: "Playlist not found" });
+    }
+
+    // check if user is creator
+    if (playlist.creator.toString() !== req.user?._id.toString()) {
+      return res.status(401).send({ error: "Unauthorized" });
+    }
+
     // get first song for image url
     const firstSong = await Song.findOne({ _id: songs[0] });
     if (!firstSong) {
@@ -67,15 +81,11 @@ router.put("/:id", auth, async (req: AuthRequest, res) => {
     }
 
     // update playlist
-    const updatedPlaylist = await Playlist.findByIdAndUpdate(
-      req.params.id,
-      { name, songs, imageUrl: firstSong.imageUrl },
-      { new: true }
-    );
-    if (!updatedPlaylist) {
-      return res.status(404).send({ error: "Playlist not found" });
-    }
-    res.status(200).json(updatedPlaylist);
+    playlist.name = name;
+    playlist.songs = songs;
+    playlist.imageUrl = firstSong.imageUrl;
+    await playlist.save();
+    res.status(200).json(playlist);
   } catch (error) {
     res.status(400).send({ error });
   }
