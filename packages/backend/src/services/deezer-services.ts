@@ -8,7 +8,7 @@ type Track = {
   imageUrl: string;
 };
 
-const extractTrackIdFromDeezerUrl = (url: string): string | null => {
+export const getTrackIdFromDeezerUrl = (url: string): string | null => {
   const urlObj = new URL(url);
   const pathSegments: string[] = urlObj.pathname.split("/");
 
@@ -28,10 +28,10 @@ const getRedirectLink = async (url: string): Promise<string> => {
   return finalUrl;
 };
 
-export const deezerUrlSearch = async (url: string): Promise<Track> => {
+export const deezerUrlFetch = async (url: string): Promise<Track> => {
   try {
     const share_url = await getRedirectLink(url);
-    const id = extractTrackIdFromDeezerUrl(share_url);
+    const id = getTrackIdFromDeezerUrl(share_url);
     const response = await axios.get(`https://api.deezer.com/track/${id}`, {
       params: {
         apikey: process.env.DEEZER_KEY,
@@ -51,4 +51,20 @@ export const deezerUrlSearch = async (url: string): Promise<Track> => {
     console.error("Error Searching for songs:", error);
     throw error;
   }
+};
+
+export const deezerFetch = async (
+  title: string,
+  album: string,
+  artist: string
+): Promise<string> => {
+  const response = await axios.get(
+    `https://api.deezer.com/search?q="${title} ${artist} ${album}"`,
+    {
+      params: {
+        apikey: process.env.DEEZER_KEY,
+      },
+    }
+  );
+  return response.data[0].id ? response.data[0].id : "";
 };

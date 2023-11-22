@@ -14,7 +14,7 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 // Function to extract song ID from Spotify URL
-const getSongIdFromUrl = (url: string): string | null => {
+export const getSongIdFromSpotifyUrl = (url: string): string | null => {
   const parts = url.split("/");
   const trackIdIndex = parts.indexOf("track");
   if (trackIdIndex !== -1 && trackIdIndex < parts.length - 1) {
@@ -23,11 +23,11 @@ const getSongIdFromUrl = (url: string): string | null => {
   return null;
 };
 
-export const spotifySongFetch = async (url: string): Promise<Track> => {
+export const spotifyUrlFetch = async (url: string): Promise<Track> => {
   const data = await spotifyApi.clientCredentialsGrant();
   spotifyApi.setAccessToken(data.body["access_token"]);
 
-  const songId = getSongIdFromUrl(url);
+  const songId = getSongIdFromSpotifyUrl(url);
   if (songId) {
     try {
       const trackInfo = await spotifyApi.getTrack(songId);
@@ -50,4 +50,20 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
     console.error("Unable to find song ID in URL");
     throw new Error("Invalid Spotify URL");
   }
+};
+
+export const spotifyFetch = async (
+  title: string,
+  album: string,
+  artist: string
+): Promise<string> => {
+  const data = await spotifyApi.clientCredentialsGrant();
+  spotifyApi.setAccessToken(data.body["access_token"]);
+
+  const trackInfo = await spotifyApi.search(
+    title + " " + artist + " " + album,
+    ["track"]
+  );
+
+  return trackInfo.body.tracks ? trackInfo.body.tracks.items[0].id : "";
 };

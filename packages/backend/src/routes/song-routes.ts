@@ -1,6 +1,14 @@
 import express from "express";
-import { deezerUrlSearch } from "../services/deezer-services";
-import { spotifySongFetch } from "../services/spotify-services";
+import {
+  deezerUrlFetch,
+  deezerFetch,
+  getTrackIdFromDeezerUrl,
+} from "../services/deezer-services";
+import {
+  spotifyUrlFetch,
+  spotifyFetch,
+  getSongIdFromSpotifyUrl,
+} from "../services/spotify-services";
 import { Song } from "../models/song-model";
 import { Track } from "../services/spotify-services";
 
@@ -27,14 +35,50 @@ const getSong = async (result: Track): Promise<Song> => {
   }
 };
 
+//Test if a deezer song has a spotify equivalent in the db
+//Input: is a deezer song
+//Output: spotify song ID
+const testIfSpotified = async (song: Track): Promise<string | null> => {
+  let searchedSong;
+  if (
+    (searchedSong = await Song.findOne({
+      name: { $regex: new RegExp(song.name, "i") },
+      album: { $regex: new RegExp(song.album, "i") },
+      artist: { $regex: new RegExp(song.artist, "i") },
+    }))
+  ) {
+    return getSongIdFromSpotifyUrl(searchedSong.providerUrl);
+  } else {
+    return await spotifyFetch(song.name, song.album, song.artist);
+  }
+};
+
+//Test if a spotify song has a deezer equivalent in the db
+//Input: is a spotify song
+//Output: deezer song ID
+const testIfDeezered = async (song: Track): Promise<string | null> => {
+  let searchedSong;
+  if (
+    (searchedSong = await Song.findOne({
+      name: { $regex: new RegExp(song.name, "i") },
+      album: { $regex: new RegExp(song.album, "i") },
+      artist: { $regex: new RegExp(song.artist, "i") },
+    }))
+  ) {
+    return getTrackIdFromDeezerUrl(searchedSong.providerUrl);
+  } else {
+    return await deezerFetch(song.name, song.album, song.artist);
+  }
+};
+
 router.post("/url", async (req, res) => {
   if (testIfValidDeezerLink(req.body.url)) {
-    deezerUrlSearch(req.body.url)
+    deezerUrlFetch(req.body.url)
       .then(async (result) => getSong(result))
       .then((result) => res.status(200).json(result))
       .catch((error) => res.status(500).send({ error }));
   } else if (testIfValidSpotifyLink(req.body.url)) {
-    spotifySongFetch(req.body.url)
+    spotifyUrlFetch(req.body.url)
       .then(async (result) => getSong(result))
       .then((result) => res.status(200).json(result))
       .catch((error) => res.status(500).send({ error }));
