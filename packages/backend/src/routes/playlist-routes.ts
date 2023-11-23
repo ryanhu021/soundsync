@@ -81,8 +81,8 @@ router.put("/:id", auth, async (req: AuthRequest, res) => {
     }
 
     // update playlist
-    playlist.name = name;
-    playlist.songs = songs;
+    playlist.name = name || playlist.name;
+    playlist.songs = songs || playlist.songs;
     playlist.imageUrl = firstSong.imageUrl;
     await playlist.save();
     res.status(200).json(playlist);
