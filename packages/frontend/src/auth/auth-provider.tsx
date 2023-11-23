@@ -34,8 +34,8 @@ export const AuthProvider: React.FunctionComponent<React.PropsWithChildren> = ({
           const json = await res.json();
           setName(json.user.name);
           setEmail(json.user.email);
-          setLoading(false);
         }
+        setLoading(false);
       })
       .catch((err) => console.log(err));
   }, []);

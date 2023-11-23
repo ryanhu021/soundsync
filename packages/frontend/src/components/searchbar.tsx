@@ -1,16 +1,24 @@
 import React from "react";
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, Spinner } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { Song } from "../views/view-playlist";
+
+interface SearchBarProps {
+  onSongFetched: (song: Song) => void;
+}
 
 type Inputs = {
   url: string;
 };
 
-function SearchBar() {
+function SearchBar(props: SearchBarProps) {
   const { register, handleSubmit } = useForm<Inputs>();
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/search/url`, {
+    setLoading(true);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/song/url`, {
       method: "POST",
       body: JSON.stringify({
         url: data.url,
@@ -20,15 +28,24 @@ function SearchBar() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
+      .then(async (res) => {
         if (res.status === 200) {
-          console.log(res);
+          props.onSongFetched(await res.json());
+        } else {
+          setError("Error getting song");
         }
+        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+        setError("Internal server error");
+        setLoading(false);
       });
   };
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <Container>
@@ -47,6 +64,7 @@ function SearchBar() {
           Search
         </Button>
       </Form>
+      <p>{error}</p>
     </Container>
   );
 }

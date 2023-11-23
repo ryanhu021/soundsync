@@ -9,7 +9,7 @@ function AddPlaylistCard() {
         <Card.Body>
           <Row>
             <Link
-              to="/new_playlist_icon.png"
+              to="/playlists/create"
               style={{ textDecoration: "none", padding: "0.2rem" }}
             >
               <Card.Img

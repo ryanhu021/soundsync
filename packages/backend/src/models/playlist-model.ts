@@ -3,6 +3,7 @@ import { Document, Schema, model, Types } from "mongoose";
 export interface Playlist extends Document {
   name: string;
   creator: Types.ObjectId;
+  creatorName: string;
   dateCreated: Date;
   imageUrl: string;
   songs: [Types.ObjectId];
@@ -18,6 +19,10 @@ const PlaylistSchema = new Schema<Playlist>(
       type: Schema.Types.ObjectId,
       ref: "User",
     },
+    creatorName: {
+      type: String,
+      required: true,
+    },
     dateCreated: { type: Date, default: Date.now() },
     songs: [
       {
@@ -27,7 +32,7 @@ const PlaylistSchema = new Schema<Playlist>(
     ],
     imageUrl: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   { collection: "playlists" }

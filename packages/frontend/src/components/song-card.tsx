@@ -1,17 +1,13 @@
 import React from "react";
 import { Card, Stack, Image, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Song } from "../views/view-playlist";
 
-interface Song {
-  name: string;
-  artist: string;
-  album: string;
-  imageURL: string;
-  songURL: string;
+interface SongCardProps extends Song {
   onDelete: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-function SongCard(props: Song) {
+function SongCard(props: SongCardProps) {
   return (
     <Card
       style={{
@@ -29,13 +25,13 @@ function SongCard(props: Song) {
       >
         <Stack direction="horizontal" gap={1}>
           <Link
-            to={props.songURL}
+            to={props.providerUrl}
             target="_blank"
             rel="noopener noreferrer"
             style={{ textDecoration: "none" }}
           >
             <Image
-              src={props.imageURL}
+              src={props.imageUrl}
               alt={props.name}
               style={{
                 height: "4.5rem",

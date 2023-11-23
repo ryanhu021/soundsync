@@ -45,7 +45,7 @@ app.get("/test-auth", auth, (req: AuthRequest, res) => {
 
 app.use("/user", userRouter);
 
-app.use("/search", songRouter);
+app.use("/song", songRouter);
 
 app.use("/playlist", playlistRouter);
 
