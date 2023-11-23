@@ -19,7 +19,7 @@ function PlaylistCard(props: PlaylistCardProps) {
             >
               <Card.Img
                 variant="top"
-                src={props.imageUrl || "/empty_playlist_icon.png"}
+                src={props.imageUrl || "/temp_playlist_icon.png"}
                 alt={props.name}
               />
             </Link>
