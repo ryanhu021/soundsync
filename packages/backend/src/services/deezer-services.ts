@@ -43,7 +43,7 @@ export const deezerUrlSearch = async (url: string): Promise<Track> => {
       artist: response.data.artist.name,
       album: response.data.album.title,
       providerUrl: `https://deezer.com/track/${id}`,
-      imageUrl: response.data.album.cover_small,
+      imageUrl: response.data.album.cover_big,
     };
 
     return track;
