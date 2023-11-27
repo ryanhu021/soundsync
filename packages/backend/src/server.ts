@@ -6,6 +6,8 @@ import userRouter from "./routes/user-routes";
 import { AuthRequest, auth } from "./util/auth";
 import playlistRouter from "./routes/playlist-routes";
 import songRouter from "./routes/song-routes";
+import oauthRouter from "./routes/oauth-routes";
+import exportRouter from "./routes/export-routes";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -44,10 +46,10 @@ app.get("/test-auth", auth, (req: AuthRequest, res) => {
 });
 
 app.use("/user", userRouter);
-
 app.use("/song", songRouter);
-
 app.use("/playlist", playlistRouter);
+app.use("/oauth", oauthRouter);
+app.use("/export", exportRouter);
 
 //running the server
 app.listen(process.env.PORT, () => {
