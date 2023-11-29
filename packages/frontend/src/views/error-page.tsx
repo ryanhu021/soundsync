@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouteError, isRouteErrorResponse } from "react-router-dom";
+import { Container } from "react-bootstrap";
 
 export default function ErrorPage() {
   const error = useRouteError();
@@ -7,7 +8,7 @@ export default function ErrorPage() {
     console.error(error);
 
     return (
-      <div id="error-page">
+      <Container id="error-page">
         <h1>Oops!</h1>
         <p>Sorry, an unexpected error has occured.</p>
         <p>
@@ -15,7 +16,7 @@ export default function ErrorPage() {
             {error.status} {error.statusText}
           </i>
         </p>
-      </div>
+      </Container>
     );
   } else {
     console.error(error);

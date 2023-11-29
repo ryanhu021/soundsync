@@ -7,17 +7,18 @@ import Playlists from "./views/playlists";
 import CreatePlaylist from "./views/create-playlist";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
-import SSNavbar from "./components/navbar";
+import NavigationBar from "./components/navigation-bar";
 import { AuthProvider } from "./auth/auth-provider";
 import { ProtectedRoute } from "./auth/protected-route";
 import SpotifyCallback from "./auth/spotify-callback";
 import ViewPlaylist from "./views/view-playlist";
+import Footer from "./components/footer";
 
 function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <SSNavbar />
+        <NavigationBar />
         <Routes>
           <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
           <Route
@@ -63,6 +64,7 @@ function App() {
             errorElement={<ErrorPage />}
           />
         </Routes>
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
   );
