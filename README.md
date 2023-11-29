@@ -1,6 +1,12 @@
-# csc307-team-project
+# SoundSync
 
-Contributing:
+## Product Vision
+
+## Story Board and UI Prototype
+
+## Data Model
+
+## Contributing:
 - Root ESLint:
   - uses recommended rules to enforce best practices and common rules for typescript
   - extends prettier's configurations: uses prettier's code formatting rules in ESlint
