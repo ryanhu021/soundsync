@@ -3,7 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Floatinglabel from "react-bootstrap/FloatingLabel";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { BackLink } from "../components/back-link";
 
