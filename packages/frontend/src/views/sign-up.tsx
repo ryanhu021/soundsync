@@ -4,6 +4,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Floatinglabel from "react-bootstrap/FloatingLabel";
 import { Link, useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import { BackLink } from "../components/back-link";
 
 type Inputs = {
   name: string;
@@ -42,8 +44,8 @@ function SignUpForm() {
   };
 
   return (
-    <div>
-      <Link to="/">Back to Home</Link>
+    <Container>
+      <BackLink />
       <h1>Sign Up Page</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Floatinglabel className="mb-3" label="Name">
@@ -85,7 +87,7 @@ function SignUpForm() {
           SignUp
         </Button>
       </Form>
-    </div>
+    </Container>
   );
 }
 

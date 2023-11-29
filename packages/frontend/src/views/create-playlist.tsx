@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { BackLink } from "../components/back-link";
 
 type Inputs = {
   name: string;
@@ -37,6 +38,7 @@ export default function CreatePlaylist() {
 
   return (
     <Container>
+      <BackLink />
       <h1>Create Playlist</h1>
       <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
         <Form.Control
