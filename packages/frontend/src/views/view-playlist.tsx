@@ -190,7 +190,7 @@ export default function ViewPlaylist() {
       )}
       <strong>By: {playlist.creatorName}</strong>
       <p>{new Date(playlist.dateCreated).toLocaleDateString()}</p>
-      <SpotifyExport />
+      <SpotifyExport playlistId={playlist._id} />
       {playlist.creatorName === user.name && (
         <div>
           <h3>Add Songs</h3>

@@ -1,4 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-node";
+import { User } from "../models/user-model";
+import { UserContext } from "../util/auth";
 
 export type Track = {
   name: string;
@@ -57,6 +59,23 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
   }
 };
 
-export const spotifyAuthUrl = (): string => {
-  return spotifyApi.createAuthorizeURL(scopes, state);
+export const spotifyExport = (
+  user: UserContext,
+  token: string,
+  playlistId: string
+) => {
+  spotifyApi
+    .authorizationCodeGrant(token)
+    .then(() => {
+      spotifyApi.createPlaylist(user.playlist.name).then((playlist) => {
+        spotifyApi.addTracksToPlaylist(playlist.body.id, trackId);
+      });
+    })
+    .catch((error) => {
+      console.log("Something went wrong!", error);
+    });
+};
+
+export const spotifyAuthUrl = (playlistId: string): string => {
+  return spotifyApi.createAuthorizeURL(scopes, playlistId);
 };
