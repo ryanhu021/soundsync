@@ -12,7 +12,6 @@ export type Track = {
 
 const scopes = ["playlist-modify-public", "playlist-modify-private"];
 const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
-const state = "soundsync-state";
 
 const spotifyApi = new SpotifyWebApi({
   redirectUri,
@@ -67,15 +66,15 @@ export const spotifyExport = (
   spotifyApi
     .authorizationCodeGrant(token)
     .then(() => {
-      spotifyApi.createPlaylist(user.playlist.name).then((playlist) => {
-        spotifyApi.addTracksToPlaylist(playlist.body.id, trackId);
-      });
+      // spotifyApi.createPlaylist(user.playlist.name).then((playlist) => {
+      //   spotifyApi.addTracksToPlaylist(playlist.body.id, trackId);
+      // });
     })
     .catch((error) => {
       console.log("Something went wrong!", error);
     });
 };
 
-export const spotifyAuthUrl = (playlistId: string): string => {
-  return spotifyApi.createAuthorizeURL(scopes, playlistId);
+export const spotifyAuthUrl = (state: string): string => {
+  return spotifyApi.createAuthorizeURL(scopes, state);
 };

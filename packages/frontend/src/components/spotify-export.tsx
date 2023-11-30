@@ -8,7 +8,7 @@ type SpotifyExportProps = {
 export default function SpotifyExport(props: SpotifyExportProps) {
   const handleSubmit = () => {
     fetch(
-      `${process.env.REACT_APP_SERVER_URL}/oauth/spotify?playlistId=${props.playlistId}`,
+      `${process.env.REACT_APP_SERVER_URL}/oauth/spotify?state=${props.playlistId}`,
       {
         method: "GET",
         credentials: "include",
