@@ -2,6 +2,7 @@ import React from "react";
 import { Button, Container, Form, Spinner } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Song } from "../views/view-playlist";
+import ComponentCenteredSpinner from "./component-centered-spinner";
 
 interface SearchBarProps {
   onSongFetched: (song: Song) => void;
@@ -44,7 +45,7 @@ function SearchBar(props: SearchBarProps) {
   };
 
   if (loading) {
-    return <Spinner />;
+    return <ComponentCenteredSpinner />;
   }
 
   return (

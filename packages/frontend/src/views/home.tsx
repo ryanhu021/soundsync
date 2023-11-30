@@ -2,9 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Button, Container } from "react-bootstrap";
 import { useAuth } from "../auth/auth-provider";
+import FullScreenSpinner from "../components/full-screen-spinner";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <FullScreenSpinner />;
+  }
 
   return (
     <Container>
