@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "./auth-provider";
 import { Navigate } from "react-router-dom";
-import { Spinner } from "react-bootstrap";
 import FullScreenSpinner from "../components/full-screen-spinner";
 
 export const ProtectedRoute: React.FunctionComponent<

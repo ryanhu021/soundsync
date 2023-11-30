@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { CardGroup, Container, Spinner } from "react-bootstrap";
+import { CardGroup, Container } from "react-bootstrap";
 import PlaylistCard from "../components/playlist-card";
 import AddPlaylistCard from "../components/add-playlist-card";
 import { useAuth } from "../auth/auth-provider";
