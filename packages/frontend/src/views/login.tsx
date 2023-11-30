@@ -5,6 +5,8 @@ import Floatinglabel from "react-bootstrap/FloatingLabel";
 import Row from "react-bootstrap/Row";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import { BackLink } from "../components/back-link";
 
 type Inputs = {
   email: string;
@@ -45,8 +47,8 @@ function LoginForm() {
   };
 
   return (
-    <div>
-      <Link to="/">Back to Home</Link>
+    <Container>
+      <BackLink />
       <h1>Login Page</h1>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Floatinglabel className="mb-3" label="Email">
@@ -75,7 +77,7 @@ function LoginForm() {
           <Link to="/signup">Create Account</Link>
         </Row>
       </Form>
-    </div>
+    </Container>
   );
 }
 
