@@ -3,14 +3,11 @@ import { AuthRequest, auth } from "../util/auth";
 import { spotifyExport } from "../services/spotify-services";
 
 const router = express.Router();
-const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
 
-router.post("/spotify", auth, async (req: AuthRequest) => {
-  spotifyExport(req.user!, req.body.token, req.body.playlistId);
-  // .then(redirectUri)
-  // .catch((err: Error) => {
-  //   console.log(err);
-  // });
+router.post("/spotify", auth, async (req: AuthRequest, res) => {
+  spotifyExport(req.user!, req.body.token, req.body.playlistId)
+    .then((result) => res.status(200).send(result))
+    .catch((error) => res.status(500).send({ error }));
 });
 
 router.post("/deezer", auth, async (req: AuthRequest, res) => {

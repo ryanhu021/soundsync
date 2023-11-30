@@ -1,24 +1,40 @@
-import React from "react";
-import { useSearchParams } from "react-router-dom";
-import { useAuth } from "./auth-provider";
+import React, { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import FullScreenSpinner from "../components/full-screen-spinner";
 
 export default function SpotifyCallback() {
-  const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const token = searchParams.get("code");
-  const state = searchParams.get("state");
-  //return a redirect back to the playlist page after the export has been completed
-  // const res = fetch(`${process.env.REACT_APP_SERVER_URL}/export/spotify`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
-  // if (res && res.status === 200) {
-  //   return await res.json();
-  // } else {
-  //   setError("Error getting songs");
-  // }
+  const playlistId = searchParams.get("state");
+  useEffect(() => {
+    if (navigate && token && playlistId) {
+      fetch(`${process.env.REACT_APP_SERVER_URL}/export/spotify`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ token, playlistId }),
+      })
+        .then(async (res) => {
+          if (res.status === 200) {
+            const { url, count } = await res.json();
+            navigate(
+              `/playlists/view/${playlistId}?exported=spotify&url=${url}&count=${count}`
+            );
+          } else {
+            navigate(
+              `/playlists/view/${playlistId}?exported=spotify&error=true`
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          navigate(`/playlists/view/${playlistId}?exported=spotify&error=true`);
+        });
+    }
+  }, [navigate, playlistId, token]);
 
-  return <p>{token + " " + state}</p>;
+  return <FullScreenSpinner />;
 }

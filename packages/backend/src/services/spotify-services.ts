@@ -1,6 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-node";
 import { User } from "../models/user-model";
 import { UserContext } from "../util/auth";
+import { Playlist } from "../models/playlist-model";
 
 export type Track = {
   name: string;
@@ -8,6 +9,11 @@ export type Track = {
   album: string;
   providerUrl: string;
   imageUrl: string;
+};
+
+export type ExportResult = {
+  url: string;
+  count: number;
 };
 
 const scopes = ["playlist-modify-public", "playlist-modify-private"];
@@ -58,21 +64,27 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
   }
 };
 
-export const spotifyExport = (
+export const spotifyExport = async (
   user: UserContext,
   token: string,
   playlistId: string
-) => {
-  spotifyApi
-    .authorizationCodeGrant(token)
-    .then(() => {
-      // spotifyApi.createPlaylist(user.playlist.name).then((playlist) => {
-      //   spotifyApi.addTracksToPlaylist(playlist.body.id, trackId);
-      // });
-    })
-    .catch((error) => {
-      console.log("Something went wrong!", error);
-    });
+): Promise<ExportResult> => {
+  // authorize user
+  const authResult = await spotifyApi.authorizationCodeGrant(token);
+  if (authResult.statusCode !== 200) {
+    Promise.reject("Authorization failed");
+  }
+
+  // fetch playlist from database
+  const playlist = await Playlist.findById(playlistId);
+  if (!playlist) {
+    Promise.reject("Playlist not found");
+  }
+
+  // fetch tracks from playlist
+  spotifyApi.createPlaylist().then((playlist) => {
+    spotifyApi.addTracksToPlaylist(playlist.body.id, trackId);
+  });
 };
 
 export const spotifyAuthUrl = (state: string): string => {
