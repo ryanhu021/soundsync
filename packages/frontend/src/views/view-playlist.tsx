@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Form, Button, Spinner } from "react-bootstrap";
+import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import SearchBar from "../components/search-bar";
 import SongCard from "../components/song-card";
@@ -8,6 +8,7 @@ import { useAuth } from "../auth/auth-provider";
 import { Playlist } from "./playlists";
 import { useParams } from "react-router-dom";
 import { BackLink } from "../components/back-link";
+import FullScreenSpinner from "../components/full-screen-spinner";
 
 export interface Song {
   _id: string;
@@ -164,7 +165,7 @@ export default function ViewPlaylist() {
   };
 
   if (loading) {
-    return <Spinner />;
+    return <FullScreenSpinner />;
   }
 
   return (
