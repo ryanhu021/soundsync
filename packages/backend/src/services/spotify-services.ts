@@ -125,6 +125,7 @@ export const spotifyExport = async (
     trackUris
   );
   if (addTracksResponse.statusCode !== 201) {
+    await spotifyApi.unfollowPlaylist(createPlaylistResponse.body.id);
     return Promise.reject("Failed to add tracks to playlist");
   }
 
