@@ -8,6 +8,7 @@ import { useAuth } from "../auth/auth-provider";
 import { Playlist } from "./playlists";
 import { useParams } from "react-router-dom";
 import { BackLink } from "../components/back-link";
+import FullScreenSpinner from "../components/full-screen-spinner";
 
 export interface Song {
   _id: string;
@@ -164,7 +165,7 @@ export default function ViewPlaylist() {
   };
 
   if (loading) {
-    return <Spinner />;
+    return <FullScreenSpinner />;
   }
 
   return (
