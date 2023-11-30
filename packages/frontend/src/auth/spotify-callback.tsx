@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import FullScreenSpinner from "../components/full-screen-spinner";
 
@@ -7,8 +7,11 @@ export default function SpotifyCallback() {
   const [searchParams] = useSearchParams();
   const token = searchParams.get("code");
   const playlistId = searchParams.get("state");
+  const [hasFetched, setHasFetched] = useState(false);
+
   useEffect(() => {
-    if (navigate && token && playlistId) {
+    if (!hasFetched && navigate && token && playlistId) {
+      setHasFetched(true);
       fetch(`${process.env.REACT_APP_SERVER_URL}/export/spotify`, {
         method: "POST",
         headers: {

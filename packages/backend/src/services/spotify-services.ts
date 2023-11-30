@@ -1,7 +1,7 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { User } from "../models/user-model";
 import { UserContext } from "../util/auth";
 import { Playlist } from "../models/playlist-model";
+import { Song } from "../models/song-model";
 
 export type Track = {
   name: string;
@@ -64,6 +64,20 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
   }
 };
 
+const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
+  if (song.providerUrl.includes("spotify")) {
+    return `spotify:track:${getSongIdFromUrl(song.providerUrl)}`;
+  }
+  const searchResponse = await spotifyApi.searchTracks(
+    `${song.name} ${song.artist} ${song.album}`,
+    { limit: 1 }
+  );
+  if (searchResponse.body.tracks?.items?.length) {
+    return searchResponse.body.tracks.items[0].uri;
+  }
+  return null;
+};
+
 export const spotifyExport = async (
   user: UserContext,
   token: string,
@@ -72,19 +86,50 @@ export const spotifyExport = async (
   // authorize user
   const authResult = await spotifyApi.authorizationCodeGrant(token);
   if (authResult.statusCode !== 200) {
-    Promise.reject("Authorization failed");
+    return Promise.reject("Authorization failed");
   }
+  spotifyApi.setAccessToken(authResult.body.access_token);
 
   // fetch playlist from database
   const playlist = await Playlist.findById(playlistId);
   if (!playlist) {
-    Promise.reject("Playlist not found");
+    return Promise.reject("Playlist not found");
   }
 
   // fetch tracks from playlist
-  spotifyApi.createPlaylist().then((playlist) => {
-    spotifyApi.addTracksToPlaylist(playlist.body.id, trackId);
-  });
+  const trackUris = (
+    await Promise.all(
+      playlist.songs.map((songId) =>
+        Song.findById(songId).then((song) => song && getTrackUriFromSong(song))
+      )
+    )
+  ).filter((trackId: string | null) => trackId !== null) as string[];
+
+  // create new playlist
+  const createPlaylistResponse = await spotifyApi.createPlaylist(
+    playlist.name,
+    {
+      description: `Created by SoundSync: ${process.env.CLIENT_URL}`,
+    }
+  );
+  if (createPlaylistResponse.statusCode !== 201) {
+    return Promise.reject("Failed to create playlist");
+  }
+
+  // add tracks to playlist
+  const addTracksResponse = await spotifyApi.addTracksToPlaylist(
+    createPlaylistResponse.body.id,
+    trackUris
+  );
+  if (addTracksResponse.statusCode !== 201) {
+    return Promise.reject("Failed to add tracks to playlist");
+  }
+
+  // return result
+  return {
+    url: createPlaylistResponse.body.external_urls.spotify,
+    count: trackUris.length,
+  };
 };
 
 export const spotifyAuthUrl = (state: string): string => {
