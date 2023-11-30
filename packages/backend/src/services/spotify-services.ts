@@ -8,11 +8,6 @@ export type Track = {
   imageUrl: string;
 };
 
-export type PlaylistResult = {
-  status: number;
-  message: string;
-};
-
 const scopes = ["playlist-modify-public", "playlist-modify-private"];
 const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
 const state = "soundsync-state";

@@ -2,7 +2,11 @@ import { Playlist } from "../models/playlist-model";
 import { User } from "../models/user-model";
 import { Song } from "../models/song-model";
 import { UserContext } from "../util/auth";
-import { PlaylistResult } from "../services/spotify-services";
+
+type PlaylistResult = {
+  status: number;
+  message: string;
+};
 
 export const getAllPlaylists = async (user: UserContext | undefined) => {
   return await Playlist.find({ creator: user?._id });
