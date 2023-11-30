@@ -27,10 +27,13 @@ const spotifyApi = new SpotifyWebApi({
 
 // Function to extract song ID from Spotify URL
 const getSongIdFromUrl = (url: string): string | null => {
-  const parts = url.split("/");
-  const trackIdIndex = parts.indexOf("track");
-  if (trackIdIndex !== -1 && trackIdIndex < parts.length - 1) {
-    return parts[trackIdIndex + 1];
+  const urlObj = new URL(url);
+  const pathSegments: string[] = urlObj.pathname.split("/");
+
+  // Find the index of "track" in the path
+  const trackIdIndex: number = pathSegments.indexOf("track");
+  if (trackIdIndex !== -1 && trackIdIndex < pathSegments.length - 1) {
+    return pathSegments[trackIdIndex + 1];
   }
   return null;
 };
