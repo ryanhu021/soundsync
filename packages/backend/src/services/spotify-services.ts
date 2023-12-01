@@ -81,59 +81,69 @@ const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
   return null;
 };
 
-export const spotifyExport = async (
-  user: UserContext,
-  token: string,
-  playlistId: string
-): Promise<ExportResult> => {
-  // authorize user
+// Function to authorize user
+const authorizeUser = async (token: string) => {
   const authResult = await spotifyApi.authorizationCodeGrant(token);
   if (authResult.statusCode !== 200) {
-    return Promise.reject("Authorization failed");
+    throw new Error("Authorization failed");
   }
   spotifyApi.setAccessToken(authResult.body.access_token);
+};
 
-  // fetch playlist from database
-  const playlist = await Playlist.findById(playlistId);
-  if (!playlist) {
-    return Promise.reject("Playlist not found");
-  }
-
-  // fetch tracks from playlist
-  const trackUris = (
-    await Promise.all(
-      playlist.songs.map((songId) =>
-        Song.findById(songId).then((song) => song && getTrackUriFromSong(song))
-      )
-    )
-  ).filter((trackId: string | null) => trackId !== null) as string[];
-
-  // create new playlist
-  const createPlaylistResponse = await spotifyApi.createPlaylist(
-    playlist.name,
-    {
-      description: `Created by SoundSync: ${process.env.CLIENT_URL}`,
-    }
+// Function to fetch tracks from a playlist
+const fetchTracksFromPlaylist = async (playlist: any) => {
+  const trackUris = await Promise.all(
+    playlist.songs.map(async (songId: string) => {
+      const song = await Song.findById(songId);
+      return song && getTrackUriFromSong(song);
+    })
   );
+  return trackUris.filter((trackId) => trackId !== null);
+};
+
+// Function to create a new playlist
+const createNewPlaylist = async (playlistName: string) => {
+  const createPlaylistResponse = await spotifyApi.createPlaylist(playlistName, {
+    description: `Created by SoundSync: ${process.env.CLIENT_URL}`,
+  });
   if (createPlaylistResponse.statusCode !== 201) {
-    return Promise.reject("Failed to create playlist");
+    throw new Error("Failed to create playlist");
   }
+  return createPlaylistResponse.body.id;
+};
 
-  // add tracks to playlist
-  const addTracksResponse = await spotifyApi.addTracksToPlaylist(
-    createPlaylistResponse.body.id,
-    trackUris
-  );
+// Function to add tracks to a playlist
+const addTracksToPlaylist = async (createPlaylistResponse: any, trackUris: string[]) => {
+  const addTracksResponse = await spotifyApi.addTracksToPlaylist(createPlaylistResponse.body.id, trackUris);
   if (addTracksResponse.statusCode !== 201) {
     await spotifyApi.unfollowPlaylist(createPlaylistResponse.body.id);
-    return Promise.reject("Failed to add tracks to playlist");
+    throw new Error("Failed to add tracks to playlist");
   }
+  return createPlaylistResponse.body.external_urls.spotify;
+};
 
-  // return result
-  return {
-    url: createPlaylistResponse.body.external_urls.spotify,
-    count: trackUris.length,
-  };
+// Main export function
+export const spotifyExport = async (user: UserContext, token: string, playlistId: string): Promise<ExportResult> => {
+  try {
+    await authorizeUser(token);
+
+    const playlist = await Playlist.findById(playlistId);
+    if (!playlist) {
+      throw new Error("Playlist not found");
+    }
+
+    const trackUris = await fetchTracksFromPlaylist(playlist);
+    const newPlaylistId = await createNewPlaylist(playlist.name);
+    const playlistUrl = await addTracksToPlaylist(newPlaylistId, trackUris);
+
+    return {
+      url: playlistUrl,
+      count: trackUris.length,
+    };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const spotifyAuthUrl = (state: string): string => {
