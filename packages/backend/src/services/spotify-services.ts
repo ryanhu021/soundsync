@@ -113,8 +113,14 @@ const createNewPlaylist = async (playlistName: string) => {
 };
 
 // Function to add tracks to a playlist
-const addTracksToPlaylist = async (createPlaylistResponse: any, trackUris: string[]) => {
-  const addTracksResponse = await spotifyApi.addTracksToPlaylist(createPlaylistResponse.body.id, trackUris);
+const addTracksToPlaylist = async (
+  createPlaylistResponse: any,
+  trackUris: string[]
+) => {
+  const addTracksResponse = await spotifyApi.addTracksToPlaylist(
+    createPlaylistResponse.body.id,
+    trackUris
+  );
   if (addTracksResponse.statusCode !== 201) {
     await spotifyApi.unfollowPlaylist(createPlaylistResponse.body.id);
     throw new Error("Failed to add tracks to playlist");
@@ -123,7 +129,11 @@ const addTracksToPlaylist = async (createPlaylistResponse: any, trackUris: strin
 };
 
 // Main export function
-export const spotifyExport = async (user: UserContext, token: string, playlistId: string): Promise<ExportResult> => {
+export const spotifyExport = async (
+  user: UserContext,
+  token: string,
+  playlistId: string
+): Promise<ExportResult> => {
   try {
     await authorizeUser(token);
 
