@@ -130,7 +130,6 @@ const addTracksToPlaylist = async (
 
 // Main export function
 export const spotifyExport = async (
-  user: UserContext,
   token: string,
   playlistId: string
 ): Promise<ExportResult> => {

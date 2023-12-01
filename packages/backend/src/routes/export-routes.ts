@@ -5,7 +5,7 @@ import { spotifyExport } from "../services/spotify-services";
 const router = express.Router();
 
 router.post("/spotify", auth, async (req: AuthRequest, res) => {
-  spotifyExport(req.user!, req.body.token, req.body.playlistId)
+  spotifyExport(req.body.token, req.body.playlistId)
     .then((result) => res.status(200).send(result))
     .catch((error) => res.status(500).send({ error }));
 });
