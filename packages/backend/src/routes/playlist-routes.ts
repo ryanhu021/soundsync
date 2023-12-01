@@ -86,7 +86,9 @@ router.put("/:id", auth, async (req: AuthRequest, res) => {
     // update playlist
     playlist.name = name || playlist.name;
     playlist.songs = songs || playlist.songs;
-    playlist.imageUrl = firstSong ? firstSong.imageUrl : playlist.imageUrl;
+    playlist.imageUrl = firstSong
+      ? firstSong.imageUrl
+      : "/temp_playlist_icon.png";
 
     await playlist.save();
     res.status(200).json(playlist);
