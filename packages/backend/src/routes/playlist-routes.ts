@@ -75,15 +75,19 @@ router.put("/:id", auth, async (req: AuthRequest, res) => {
     }
 
     // get first song for image url
-    const firstSong = await Song.findOne({ _id: songs[0] });
-    if (!firstSong) {
-      return res.status(404).send({ error: "Error updating playlist" });
+    let firstSong: Song | null = null;
+    if (songs && songs.length > 0) {
+      firstSong = await Song.findOne({ _id: songs[0] });
+      if (!firstSong) {
+        console.log("first song not found");
+        return res.status(404).send({ error: "Error updating playlist" });
+      }
     }
-
     // update playlist
     playlist.name = name || playlist.name;
     playlist.songs = songs || playlist.songs;
-    playlist.imageUrl = firstSong.imageUrl;
+    playlist.imageUrl = firstSong ? firstSong.imageUrl : playlist.imageUrl;
+
     await playlist.save();
     res.status(200).json(playlist);
   } catch (error) {

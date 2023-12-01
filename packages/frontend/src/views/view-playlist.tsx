@@ -113,6 +113,7 @@ export default function ViewPlaylist() {
     setLoading(true);
     const updatedSongs = [...songs];
     updatedSongs.splice(index, 1);
+    console.log(updatedSongs);
     fetch(`${process.env.REACT_APP_SERVER_URL}/playlist/${playlist._id}`, {
       method: "PUT",
       headers: {
