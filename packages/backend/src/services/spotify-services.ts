@@ -155,6 +155,6 @@ export const spotifyExport = async (
   }
 };
 
-export const spotifyAuthUrl = (state: string): string => {
-  return spotifyApi.createAuthorizeURL(scopes, state);
+export const spotifyAuthUrl = (playlistId: string): string => {
+  return spotifyApi.createAuthorizeURL(scopes, playlistId);
 };
