@@ -1,5 +1,4 @@
 import SpotifyWebApi from "spotify-web-api-node";
-import { UserContext } from "../util/auth";
 import { Playlist } from "../models/playlist-model";
 import { Song } from "../models/song-model";
 
