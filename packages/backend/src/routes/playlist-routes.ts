@@ -74,16 +74,25 @@ router.put("/:id", auth, async (req: AuthRequest, res) => {
       return res.status(401).send({ error: "Unauthorized" });
     }
 
-    // get first song for image url
-    const firstSong = await Song.findOne({ _id: songs[0] });
-    if (!firstSong) {
-      return res.status(404).send({ error: "Error updating playlist" });
+    // if we are deleting/adding songs, we need to update the image url
+    if (!name && songs) {
+      // if there is a first song, get its image url
+      if (songs.length > 0) {
+        const firstSong = await Song.findOne({ _id: songs[0] });
+        if (!firstSong) {
+          console.log("first song not found");
+          return res.status(404).send({ error: "Error updating playlist" });
+        }
+        playlist.imageUrl = firstSong.imageUrl;
+      } else {
+        // if there are no songs, set the image url to the default
+        playlist.imageUrl = "/temp_playlist_icon.png";
+      }
     }
-
     // update playlist
     playlist.name = name || playlist.name;
     playlist.songs = songs || playlist.songs;
-    playlist.imageUrl = firstSong.imageUrl;
+
     await playlist.save();
     res.status(200).json(playlist);
   } catch (error) {

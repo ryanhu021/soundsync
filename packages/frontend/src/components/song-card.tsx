@@ -21,6 +21,7 @@ function SongCard(props: SongCardProps) {
           margin: "0 0 0 0.25rem",
           display: "flex",
           alignItems: "center",
+          width: "100%",
         }}
       >
         <Stack direction="horizontal" gap={1}>
@@ -38,13 +39,30 @@ function SongCard(props: SongCardProps) {
               }}
             />
           </Link>
-
-          <div>
-            <h5 style={{ fontWeight: "bold" }}>{props.name}</h5>
-            <p>
+          <Col>
+            <h5
+              style={{
+                fontWeight: "bold",
+                margin: 0,
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "50vw",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {props.name}
+            </h5>
+            <p
+              style={{
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                width: "50vw",
+                whiteSpace: "nowrap",
+              }}
+            >
               {props.artist} • {props.album}
             </p>
-          </div>
+          </Col>
           <Col
             style={{
               position: "absolute",
