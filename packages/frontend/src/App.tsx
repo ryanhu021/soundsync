@@ -13,6 +13,7 @@ import { ProtectedRoute } from "./auth/protected-route";
 import SpotifyCallback from "./auth/spotify-callback";
 import ViewPlaylist from "./views/view-playlist";
 import Footer from "./components/footer";
+import DeezerCallback from "./auth/deezer-callback";
 
 function App() {
   return (
@@ -59,6 +60,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <SpotifyCallback />
+              </ProtectedRoute>
+            }
+            errorElement={<ErrorPage />}
+          />
+          <Route
+            path="/auth/deezer/callback"
+            element={
+              <ProtectedRoute>
+                <DeezerCallback />
               </ProtectedRoute>
             }
             errorElement={<ErrorPage />}

@@ -9,6 +9,7 @@ import { Playlist } from "./playlists";
 import { useParams, useSearchParams } from "react-router-dom";
 import { BackLink } from "../components/back-link";
 import FullScreenSpinner from "../components/full-screen-spinner";
+import DeezerExport from "../components/deezer-export";
 
 export interface Song {
   _id: string;
@@ -219,6 +220,7 @@ export default function ViewPlaylist() {
       <strong>By: {playlist.creatorName}</strong>
       <p>{new Date(playlist.dateCreated).toLocaleDateString()}</p>
       <SpotifyExport playlistId={playlist._id} />
+      <DeezerExport playlistId={playlist._id} />
       {playlist.creatorName === user.name && (
         <div>
           <h3>Add Songs</h3>
