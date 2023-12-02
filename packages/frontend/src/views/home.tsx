@@ -7,14 +7,14 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <Container style={{ color: "purple" }}>
+    <Container style={{ color: "#8a6bc3" }}>
       <header>
         <h2
           style={{
             font: "Times",
             fontWeight: "bold",
             textAlign: "center",
-            scale: "1.3",
+            fontSize: "3.5em",
             paddingTop: "3rem",
           }}
         >
@@ -24,7 +24,7 @@ export default function Home() {
           style={{
             font: "Times",
             textAlign: "center",
-            scale: "1.5",
+            fontSize: "1.5em",
             padding: "1rem",
           }}
         >
@@ -50,7 +50,11 @@ export default function Home() {
                   Let your imaginations flow onto the DJ board!
                 </Card.Title>
                 <Link to="/playlists/create">
-                  <Button>Create A New Playlist</Button>
+                  <Button
+                    style={{ backgroundColor: "#5f6acf", color: "white" }}
+                  >
+                    Create A New Playlist
+                  </Button>
                 </Link>
               </Card.Body>
             </Card>
@@ -71,7 +75,11 @@ export default function Home() {
                   View your playlists
                 </Card.Title>
                 <Link to="/playlists">
-                  <Button>My Playlists</Button>
+                  <Button
+                    style={{ backgroundColor: "#5f6acf", color: "white" }}
+                  >
+                    My Playlists
+                  </Button>
                 </Link>
               </Card.Body>
             </Card>
