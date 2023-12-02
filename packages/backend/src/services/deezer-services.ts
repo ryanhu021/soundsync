@@ -8,6 +8,9 @@ type Track = {
   imageUrl: string;
 };
 
+const scopes = "manage_library,delete_library";
+const redirectUri = `${process.env.CLIENT_URL}/auth/deezer/callback`;
+
 const extractTrackIdFromDeezerUrl = (url: string): string | null => {
   const urlObj = new URL(url);
   const pathSegments: string[] = urlObj.pathname.split("/");
@@ -51,4 +54,13 @@ export const deezerUrlSearch = async (url: string): Promise<Track> => {
     console.error("Error Searching for songs:", error);
     throw error;
   }
+};
+
+export const deezerAuthUrl = (id: string): string => {
+  return (
+    `https://connect.deezer.com/oauth/auth.php?app_id=${process.env.DEEZER_APP_ID}` +
+    `&redirect_uri=${redirectUri}` +
+    `&perms=${scopes}` +
+    `&state=${id}`
+  );
 };
