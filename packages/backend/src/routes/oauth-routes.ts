@@ -12,12 +12,13 @@ router.get("/spotify", auth, async (req, res) => {
   }
   res.send({ url: spotifyAuthUrl(req.query.playlistId) });
 });
+
 router.get("/deezer", auth, async (req, res) => {
   if (!req.query.playlistId || typeof req.query.playlistId !== "string") {
-    res.status(400);
-    res.send({ error: "Missing State Parameter" });
+    res.status(400).send({ error: "Missing State Parameter" });
     return;
   }
   res.send({ url: deezerAuthUrl(req.query.playlistId) });
 });
+
 export default router;
