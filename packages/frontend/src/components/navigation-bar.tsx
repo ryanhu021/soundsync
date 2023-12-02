@@ -65,7 +65,11 @@ function NavigationBar() {
                   Log in
                 </Nav.Link>
                 <Nav.Link as={NavLink} to="/signup">
-                  <Button>Sign up</Button>
+                  <Button
+                    style={{ backgroundColor: "#5f6acf", color: "white" }}
+                  >
+                    Sign up
+                  </Button>
                 </Nav.Link>
               </>
             )}
