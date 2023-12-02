@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { CardGroup, Container, Spinner } from "react-bootstrap";
+import { CardGroup, Container } from "react-bootstrap";
 import PlaylistCard from "../components/playlist-card";
 import AddPlaylistCard from "../components/add-playlist-card";
 import { useAuth } from "../auth/auth-provider";
+import { BackLink } from "../components/back-link";
+import FullScreenSpinner from "../components/full-screen-spinner";
 
 export interface Playlist {
   _id: string;
@@ -76,14 +78,13 @@ export default function Playlists() {
   };
 
   if (loading) {
-    return <Spinner />;
+    return <FullScreenSpinner />;
   }
 
   return (
     <Container>
-      <h1 style={{ marginBottom: "1rem", marginTop: "1rem" }}>
-        {user.name}&apos;s Playlists
-      </h1>
+      <BackLink />
+      <h1 style={{ marginBottom: "1rem" }}>{user.name}&apos;s Playlists</h1>
       <div
         style={{
           justifyContent: "center",
