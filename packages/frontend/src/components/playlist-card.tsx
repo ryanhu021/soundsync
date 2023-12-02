@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Playlist } from "../views/playlists";
+import "../component-styles/playlist-card.css";
 
 interface PlaylistCardProps extends Playlist {
   onDelete: React.MouseEventHandler<HTMLButtonElement>;
@@ -10,13 +11,10 @@ interface PlaylistCardProps extends Playlist {
 function PlaylistCard(props: PlaylistCardProps) {
   return (
     <div>
-      <Card style={{ width: "10rem", height: "16.5rem" }}>
+      <Card className="playlist-card">
         <Card.Body>
           <Row>
-            <Link
-              to={`/playlists/view/${props._id}`}
-              style={{ textDecoration: "none", padding: "0.2rem" }}
-            >
+            <Link to={`/playlists/view/${props._id}`} className="playlist-link">
               <Card.Img
                 variant="top"
                 src={props.imageUrl || "/temp_playlist_icon.png"}
@@ -26,52 +24,16 @@ function PlaylistCard(props: PlaylistCardProps) {
           </Row>
           <Row>
             <div>
-              <h5
-                style={{
-                  fontWeight: "bold",
-                  marginBottom: "3%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  width: "100%",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {props.name}
-              </h5>
-              <p
-                style={{
-                  marginBottom: "5%",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  width: "100%",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {props.creator}
-              </p>
+              <h5 className="playlist-info">{props.name}</h5>
+              <p className="playlist-creator">{props.creator}</p>
             </div>
           </Row>
-          <Col style={{ display: "flex", justifyContent: "space-between" }}>
-            <button style={{ border: "none", padding: 0, background: "none" }}>
-              <Image
-                src="/upload_icon.png"
-                alt="upload"
-                style={{
-                  width: "1rem",
-                }}
-              />
+          <Col className="playlist-actions">
+            <button>
+              <Image src="/upload_icon.png" alt="upload" />
             </button>
-            <button
-              style={{ border: "none", padding: 0, background: "none" }}
-              onClick={props.onDelete}
-            >
-              <Image
-                src="/delete_icon.png"
-                alt="delete"
-                style={{
-                  width: "1rem",
-                }}
-              />
+            <button onClick={props.onDelete}>
+              <Image src="/delete_icon.png" alt="delete" />
             </button>
           </Col>
         </Card.Body>
