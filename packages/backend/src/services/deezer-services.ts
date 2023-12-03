@@ -64,3 +64,20 @@ export const deezerAuthUrl = (id: string): string => {
     `&state=${id}`
   );
 };
+
+export const getAccessToken = async (
+  code: string
+): Promise<string | undefined> => {
+  const response = await axios.get(
+    `https://connect.deezer.com/oauth/access_token.php?app_id=${process.env.DEEZER_APP_ID}` +
+      `&secret=${process.env.DEEZER_KEY}` +
+      `&code=${code}` +
+      `&output=json`
+  );
+  // if (response.data === "wrong code") {
+  //   console.error("Wrong Code");
+  //   throw new Error("Wrong Code");
+  // }
+  const accessToken = response.data.access_token;
+  return accessToken;
+};
