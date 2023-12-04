@@ -83,7 +83,6 @@ const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
 // Function to authorize user
 const authorizeUser = async (token: string): Promise<void> => {
   const authResult = await spotifyApi.authorizationCodeGrant(token);
-  console.log("auth result", JSON.stringify(authResult));
   if (authResult.statusCode !== 200) {
     throw new Error("Authorization failed");
   }
@@ -110,10 +109,6 @@ const createNewPlaylistWithTracks = async (
   const createPlaylistResponse = await spotifyApi.createPlaylist(playlistName, {
     description: `Created by SoundSync: ${process.env.CLIENT_URL}`,
   });
-  console.log(
-    "create playlist response",
-    JSON.stringify(createPlaylistResponse)
-  );
   if (createPlaylistResponse.statusCode !== 201) {
     throw new Error("Failed to create playlist");
   }
