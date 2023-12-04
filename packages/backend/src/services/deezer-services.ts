@@ -74,10 +74,6 @@ export const getAccessToken = async (
       `&code=${code}` +
       `&output=json`
   );
-  // if (response.data === "wrong code") {
-  //   console.error("Wrong Code");
-  //   throw new Error("Wrong Code");
-  // }
   const accessToken = response.data.access_token;
   return accessToken;
 };

@@ -18,14 +18,12 @@ router.get("/deezer", auth, async (req, res) => {
 });
 
 router.get("/deezer/token", async (req, res) => {
-  console.log("Code:", req.query.code);
   if (!req.query.code || typeof req.query.code !== "string") {
     res.status(400).send({ error: "Missing Code Parameter" });
     return;
   }
   try {
     const token = await getAccessToken(req.query.code);
-    console.log("Token:", token);
     res.status(200).send({ token: token });
   } catch (error) {
     console.error(error);
