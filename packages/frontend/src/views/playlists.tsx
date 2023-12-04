@@ -5,6 +5,7 @@ import AddPlaylistCard from "../components/add-playlist-card";
 import { useAuth } from "../auth/auth-provider";
 import { BackLink } from "../components/back-link";
 import FullScreenSpinner from "../components/full-screen-spinner";
+import "../component-styles/playlists-styles.css";
 
 export interface Playlist {
   _id: string;
@@ -84,19 +85,9 @@ export default function Playlists() {
   return (
     <Container>
       <BackLink />
-      <h1 style={{ marginBottom: "1rem" }}>{user.name}&apos;s Playlists</h1>
-      <div
-        style={{
-          justifyContent: "center",
-        }}
-      >
-        <CardGroup
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-          }}
-        >
+      <h1 className="page-title">{user.name}&apos;s Playlists</h1>
+      <div className="playlists-container">
+        <CardGroup className="playlists-card-group">
           <AddPlaylistCard />
           {playlists.map((playlist: Playlist, index: number) => (
             <PlaylistCard

@@ -1,0 +1,16 @@
+.page-title {
+  margin-bottom: 1rem;
+}
+
+.playlists-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: left;
+}
+
+.playlists-card-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
