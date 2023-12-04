@@ -8,7 +8,7 @@ type Track = {
   imageUrl: string;
 };
 
-const scopes = "manage_library,delete_library";
+const scopes = "manage_library,delete_library,basic_access";
 const redirectUri = `${process.env.CLIENT_URL}/auth/deezer/callback`;
 
 const extractTrackIdFromDeezerUrl = (url: string): string | null => {
