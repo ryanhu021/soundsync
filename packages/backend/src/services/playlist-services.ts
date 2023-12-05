@@ -47,8 +47,8 @@ export const createPlaylist = async (
 export const updatePlaylistByID = async (
   id: string,
   user: UserContext | undefined,
-  name: string,
-  songs: Song["_id"]
+  name: string | undefined,
+  songs: Song["_id"] | undefined
 ): Promise<PlaylistResult | Playlist> => {
   const playlist = await Playlist.findById(id);
   if (!playlist) {
