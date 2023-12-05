@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useAuth } from "./auth-provider";
 
-export default function asyncDeezerCallback() {
+export default function DeezerCallback() {
   const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
