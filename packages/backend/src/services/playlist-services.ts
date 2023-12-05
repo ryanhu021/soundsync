@@ -24,8 +24,11 @@ export const createPlaylist = async (
   name: string,
   user: UserContext | undefined
 ) => {
-  const creator = user?._id;
-  const creatorName = user?.name;
+  if (!user) {
+    return Promise.reject({ message: "User not found", status: 404 });
+  }
+  const creator = user._id;
+  const creatorName = user.name;
   const username = await User.findById(creator);
   if (!username) {
     return Promise.reject({ message: "User not found", status: 404 });
@@ -51,13 +54,17 @@ export const updatePlaylistByID = async (
   name: string | undefined,
   songs: Song["_id"] | undefined
 ): Promise<PlaylistResult | Playlist> => {
+  if (!user) {
+    return Promise.reject({ message: "User not found", status: 404 });
+  }
+
   const playlist = await Playlist.findById(id);
   if (!playlist) {
     return Promise.reject({ message: "Playlist not found", status: 404 });
   }
 
   // check if user is creator
-  if (playlist.creator.toString() !== user?._id.toString()) {
+  if (playlist.creator.toString() !== user._id.toString()) {
     return Promise.reject({ message: "Unauthorized", status: 401 });
   }
 
@@ -90,11 +97,15 @@ export const deletePlaylistByID = async (
   id: string,
   user: UserContext | undefined
 ) => {
+  if (!user) {
+    return Promise.reject({ message: "User not found", status: 404 });
+  }
+
   const playlist = await Playlist.findById(id);
   if (!playlist) {
     return Promise.reject({ message: "Playlist not found", status: 404 });
   }
-  if (playlist.creator.toString() !== user?._id.toString()) {
+  if (playlist.creator.toString() !== user._id.toString()) {
     return Promise.reject({ message: "Unauthorized", status: 401 });
   }
   await playlist.deleteOne();
