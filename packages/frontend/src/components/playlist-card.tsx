@@ -15,11 +15,13 @@ function PlaylistCard(props: PlaylistCardProps) {
         <Card.Body>
           <Row>
             <Link to={`/playlists/view/${props._id}`} className="playlist-link">
-              <Card.Img
-                variant="top"
-                src={props.imageUrl || "/temp_playlist_icon.png"}
-                alt={props.name}
-              />
+              <div className="playlist-card-img-container">
+                <Card.Img
+                  variant="top"
+                  src={props.imageUrl || "/temp_playlist_icon.png"}
+                  alt={props.name}
+                />
+              </div>
             </Link>
           </Row>
           <Row>
