@@ -91,22 +91,23 @@ const createPlaylistWithTracks = async (
   token: string,
   id: string
 ): Promise<string> => {
-  console.log(token + " " + typeof token);
-  console.log(id + " " + typeof id);
+  const title = encodeURIComponent(playlistName);
   try {
-    const response = await axios.post(
-      `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${playlistName.replace(
-        " ",
-        "%20"
-      )}`
+    const createResponse = await axios.post(
+      `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${title}`
     );
+    if (createResponse.status !== 200) {
+      throw new Error("Failed to create playlist");
+    }
 
-    const playlistId = response.data.id;
-    console.log(`Playlist created with ID: ${playlistId}`);
+    const playlistId = createResponse.data.id;
 
-    await axios.post(
+    const addResponse = await axios.post(
       `https://api.deezer.com/playlist/${playlistId}/tracks?access_token=${token}&songs=${tracks.join()}`
     );
+    if (addResponse.status !== 200) {
+      throw new Error("Failed to add songs to playlist");
+    }
 
     return `https://www.deezer.com/playlist/${playlistId}`;
   } catch (error) {
@@ -150,7 +151,6 @@ const getUserId = async (token: string): Promise<string | null> => {
         access_token: token,
       },
     });
-    console.log(res.data.id);
     if (res.data.id && typeof res.data.id === "number") {
       return res.data.id.toString();
     }

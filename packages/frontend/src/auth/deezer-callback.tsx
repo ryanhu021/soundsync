@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import FullScreenSpinner from "../components/full-screen-spinner";
-import { useAuth } from "./auth-provider";
 
 export default function DeezerCallback() {
-  const { user } = useAuth();
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
   const playlistId = searchParams.get("state");
