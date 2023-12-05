@@ -12,14 +12,15 @@ const scopes = ["playlist-modify-public", "playlist-modify-private"];
 const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
 const state = "soundsync-state";
 
-const spotifyApi = new SpotifyWebApi({
+export const spotifyApi = new SpotifyWebApi({
   redirectUri,
-  clientId: process.env.SPOTIFY_CLIENT_ID || "",
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
 // Function to extract song ID from Spotify URL
 const getSongIdFromUrl = (url: string): string | null => {
+  console.log(url);
   const parts = url.split("/");
   const trackIdIndex = parts.indexOf("track");
   if (trackIdIndex !== -1 && trackIdIndex < parts.length - 1) {
