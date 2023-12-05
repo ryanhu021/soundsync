@@ -1,4 +1,6 @@
 import SpotifyWebApi from "spotify-web-api-node";
+import { Playlist } from "../models/playlist-model";
+import { Song } from "../models/song-model";
 
 export type Track = {
   name: string;
@@ -8,9 +10,13 @@ export type Track = {
   imageUrl: string;
 };
 
+export type ExportResult = {
+  url: string;
+  count: number;
+};
+
 const scopes = ["playlist-modify-public", "playlist-modify-private"];
 const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
-const state = "soundsync-state";
 
 const spotifyApi = new SpotifyWebApi({
   redirectUri,
@@ -20,10 +26,13 @@ const spotifyApi = new SpotifyWebApi({
 
 // Function to extract song ID from Spotify URL
 const getSongIdFromUrl = (url: string): string | null => {
-  const parts = url.split("/");
-  const trackIdIndex = parts.indexOf("track");
-  if (trackIdIndex !== -1 && trackIdIndex < parts.length - 1) {
-    return parts[trackIdIndex + 1];
+  const urlObj = new URL(url);
+  const pathSegments: string[] = urlObj.pathname.split("/");
+
+  // Find the index of "track" in the path
+  const trackIdIndex: number = pathSegments.indexOf("track");
+  if (trackIdIndex !== -1 && trackIdIndex < pathSegments.length - 1) {
+    return pathSegments[trackIdIndex + 1];
   }
   return null;
 };
@@ -57,6 +66,92 @@ export const spotifySongFetch = async (url: string): Promise<Track> => {
   }
 };
 
-export const spotifyAuthUrl = (): string => {
-  return spotifyApi.createAuthorizeURL(scopes, state);
+const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
+  if (song.providerUrl.includes("spotify")) {
+    return `spotify:track:${getSongIdFromUrl(song.providerUrl)}`;
+  }
+  const searchResponse = await spotifyApi.searchTracks(
+    `${song.name} ${song.artist} ${song.album}`,
+    { limit: 1 }
+  );
+  if (searchResponse.body.tracks?.items?.length) {
+    return searchResponse.body.tracks.items[0].uri;
+  }
+  return null;
+};
+
+// Function to authorize user
+const authorizeUser = async (token: string): Promise<void> => {
+  const authResult = await spotifyApi.authorizationCodeGrant(token);
+  if (authResult.statusCode !== 200) {
+    throw new Error("Authorization failed");
+  }
+  spotifyApi.setAccessToken(authResult.body.access_token);
+};
+
+// Function to fetch track URIs from a playlist
+const fetchTrackUrisFromPlaylist = async (
+  playlist: Playlist
+): Promise<string[]> =>
+  (
+    await Promise.all(
+      playlist.songs.map((songId) =>
+        Song.findById(songId).then((song) => song && getTrackUriFromSong(song))
+      )
+    )
+  ).filter((trackId: string | null) => trackId !== null) as string[];
+
+// Function to create a new playlist
+const createNewPlaylistWithTracks = async (
+  playlistName: string,
+  trackUris: string[]
+): Promise<string> => {
+  const createPlaylistResponse = await spotifyApi.createPlaylist(playlistName, {
+    description: `Created by SoundSync: ${process.env.CLIENT_URL}`,
+  });
+  if (createPlaylistResponse.statusCode !== 201) {
+    throw new Error("Failed to create playlist");
+  }
+  const addTracksResponse = await spotifyApi.addTracksToPlaylist(
+    createPlaylistResponse.body?.id,
+    trackUris
+  );
+  if (addTracksResponse.statusCode !== 201) {
+    await spotifyApi.unfollowPlaylist(createPlaylistResponse.body.id);
+    throw new Error("Failed to add tracks to playlist");
+  }
+  return createPlaylistResponse.body.external_urls.spotify;
+};
+
+// Main export function
+export const spotifyExport = async (
+  token: string,
+  playlistId: string
+): Promise<ExportResult> => {
+  try {
+    await authorizeUser(token);
+
+    const playlist = await Playlist.findById(playlistId);
+    if (!playlist) {
+      throw new Error("Playlist not found");
+    }
+
+    const trackUris = await fetchTrackUrisFromPlaylist(playlist);
+    const playlistUrl = await createNewPlaylistWithTracks(
+      playlist.name,
+      trackUris
+    );
+
+    return {
+      url: playlistUrl,
+      count: trackUris.length,
+    };
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
+
+export const spotifyAuthUrl = (playlistId: string): string => {
+  return spotifyApi.createAuthorizeURL(scopes, playlistId);
 };
