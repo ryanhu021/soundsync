@@ -28,11 +28,6 @@
   object-position: center center;
 }
 
-.playlist-card divimg { 
-  width: 100%;
-  height: 100%;
-}
-
 .playlist-link {
   text-decoration: none;
   padding: "0.2rem";
