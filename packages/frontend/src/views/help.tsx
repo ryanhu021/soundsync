@@ -40,7 +40,7 @@ export default function Help() {
             <Card
               style={{
                 display: "flex",
-                background: "#5f6acf",
+                background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
                 padding: "0.7rem",
                 textAlign: "center",
                 backgroundSize: "27rem",
@@ -68,7 +68,7 @@ export default function Help() {
             <Card
               style={{
                 display: "flex",
-                background: "#5f6acf",
+                background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
                 padding: "0.7rem",
                 textAlign: "center",
                 backgroundSize: "27rem",
@@ -96,7 +96,7 @@ export default function Help() {
             <Card
               style={{
                 display: "flex",
-                background: "#5f6acf",
+                background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
                 padding: "0.7rem",
                 textAlign: "center",
                 backgroundSize: "27rem",
