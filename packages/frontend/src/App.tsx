@@ -8,6 +8,7 @@ import CreatePlaylist from "./views/create-playlist";
 import SignUpForm from "./views/sign-up";
 import LoginForm from "./views/login";
 import NavigationBar from "./components/navigation-bar";
+import Help from "./views/help";
 import { AuthProvider } from "./auth/auth-provider";
 import { ProtectedRoute } from "./auth/protected-route";
 import SpotifyCallback from "./auth/spotify-callback";
@@ -55,6 +56,7 @@ function App() {
             element={<SignUpForm />}
             errorElement={<ErrorPage />}
           />
+          <Route path="/help" element={<Help />} errorElement={<ErrorPage />} />
           <Route
             path="/auth/spotify/callback"
             element={
