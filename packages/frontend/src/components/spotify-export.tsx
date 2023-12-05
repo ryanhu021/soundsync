@@ -1,12 +1,19 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 
-export default function SpotifyExport() {
+type SpotifyExportProps = {
+  playlistId: string;
+};
+
+export default function SpotifyExport(props: SpotifyExportProps) {
   const handleSubmit = () => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/oauth/spotify`, {
-      method: "GET",
-      credentials: "include",
-    })
+    fetch(
+      `${process.env.REACT_APP_SERVER_URL}/oauth/spotify?playlistId=${props.playlistId}`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    )
       .then((res) => res.json())
       .then((res) => {
         if (res.url) {
