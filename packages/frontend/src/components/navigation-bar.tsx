@@ -61,9 +61,6 @@ function NavigationBar() {
               </>
             ) : (
               <>
-                <Nav.Link as={NavLink} to="/help">
-                  Help
-                </Nav.Link>
                 <Nav.Link as={NavLink} to="/login">
                   Log in
                 </Nav.Link>

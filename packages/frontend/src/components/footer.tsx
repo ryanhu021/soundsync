@@ -1,6 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub } from "@fortawesome/free-brands-svg-icons";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -8,6 +9,16 @@ export default function Footer() {
       © 2023 SoundSync | A cross-platform playlist manager | All rights
       reserved.
       <br />
+      <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <Link to="/help">Help</Link>
+        </div>
+      </div>
       <a
         href="https://github.com/ryanhu021/csc307-team-project"
         target="_blank"

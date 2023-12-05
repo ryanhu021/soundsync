@@ -1,7 +1,7 @@
 import React from "react";
 import FullScreenSpinner from "../components/full-screen-spinner";
 import { useAuth } from "../auth/auth-provider";
-import { Container, Card, Button } from "react-bootstrap";
+import { Container, Card, Button, CardText } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function Help() {
@@ -43,7 +43,6 @@ export default function Help() {
                 background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
                 padding: "0.7rem",
                 textAlign: "center",
-                backgroundSize: "27rem",
                 marginTop: "1.5rem",
                 marginRight: "2rem",
               }}
@@ -71,7 +70,6 @@ export default function Help() {
                 background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
                 padding: "0.7rem",
                 textAlign: "center",
-                backgroundSize: "27rem",
                 marginTop: "1.5rem",
                 marginRight: "2rem",
               }}
@@ -99,7 +97,6 @@ export default function Help() {
                 background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
                 padding: "0.7rem",
                 textAlign: "center",
-                backgroundSize: "27rem",
                 marginTop: "1.5rem",
                 marginRight: "2rem",
               }}
@@ -120,6 +117,62 @@ export default function Help() {
                   </Button>
                 </Link>
               </Card.Body>
+            </Card>
+            <Card
+              style={{
+                display: "flex",
+                background: "linear-gradient(-135deg, #8a6bc3, #5f6acf)",
+                padding: "0.7rem",
+                marginTop: "1.5rem",
+                marginRight: "2rem",
+              }}
+            >
+              <Container style={{ width: "40rem" }}>
+                <Card.Body style={{ color: "white" }}>
+                  <Card.Title style={{ textAlign: "center" }}>
+                    Steps on how to add songs to your playlist:
+                  </Card.Title>
+                  <CardText>
+                    <ol>
+                      <li>
+                        Obtain the spotify or deezer song link.
+                        <ul>
+                          <li>
+                            For Spotify, right click on the song and select
+                            &quot;Copy Song Link&quot;.
+                            <br />
+                            <img
+                              src="spotifysong.png"
+                              style={{ width: "29rem" }}
+                            />
+                          </li>
+                          <br />
+                          <li>
+                            For Deezer, right click on the song and select
+                            &quot;Copy Link&quot;.
+                            <br />
+                            <img
+                              src="deezersong.png"
+                              style={{ width: "29rem" }}
+                            />
+                          </li>
+                        </ul>
+                      </li>
+                      <br />
+                      <li>
+                        Paste that link into the &quot;Add Songs&quot; section
+                        to add the song into your SoundSync playlist.
+                      </li>
+                      <br />
+                      <li>
+                        Once your are satisfied with your playlist, go ahead and
+                        click that export button to export your playlist to your
+                        desired platform!
+                      </li>
+                    </ol>
+                  </CardText>
+                </Card.Body>
+              </Container>
             </Card>
           </Container>
         </div>
