@@ -67,7 +67,6 @@ export const updatePlaylistByID = async (
     if (songs.length > 0) {
       const firstSong = await Song.findOne({ _id: songs[0] });
       if (!firstSong) {
-        console.log("first song not found");
         return Promise.reject({
           message: "Error updating playlist",
           status: 404,
