@@ -31,13 +31,26 @@ function SongCard(props: SongCardProps) {
             rel="noopener noreferrer"
             style={{ textDecoration: "none" }}
           >
-            <Image
-              src={props.imageUrl}
-              alt={props.name}
+            <div
               style={{
+                position: "relative",
+                overflow: "hidden",
+                width: "4.5rem",
                 height: "4.5rem",
               }}
-            />
+            >
+              <Image
+                src={props.imageUrl}
+                alt={props.name}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "center center",
+                }}
+              />
+            </div>
           </Link>
           <Col>
             <h5
