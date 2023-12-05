@@ -12,6 +12,7 @@ const scopes = "manage_library,delete_library";
 const redirectUri = `${process.env.CLIENT_URL}/auth/deezer/callback`;
 
 const extractTrackIdFromDeezerUrl = (url: string): string | null => {
+  console.log(url);
   const urlObj = new URL(url);
   const pathSegments: string[] = urlObj.pathname.split("/");
 
@@ -35,6 +36,10 @@ export const deezerUrlSearch = async (url: string): Promise<Track> => {
   try {
     const share_url = await getRedirectLink(url);
     const id = extractTrackIdFromDeezerUrl(share_url);
+    if (!id) {
+      throw new Error("Unable to find song ID in URL");
+    }
+
     const response = await axios.get(`https://api.deezer.com/track/${id}`, {
       params: {
         apikey: process.env.DEEZER_KEY,
