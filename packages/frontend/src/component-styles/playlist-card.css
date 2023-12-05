@@ -60,6 +60,7 @@
   border: none;
   border-image-slice: 1;
   -webkit-background-clip: text !important;
+  background-clip: text !important;
   text-decoration: none;
   transition: all 0.4s ease;
 }
