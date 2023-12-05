@@ -8,7 +8,7 @@ type Track = {
   imageUrl: string;
 };
 
-const scopes = "manage_library,delete_library";
+const scopes = "manage_library,delete_library,basic_access";
 const redirectUri = `${process.env.CLIENT_URL}/auth/deezer/callback`;
 
 const extractTrackIdFromDeezerUrl = (url: string): string | null => {
@@ -63,4 +63,17 @@ export const deezerAuthUrl = (id: string): string => {
     `&perms=${scopes}` +
     `&state=${id}`
   );
+};
+
+export const getAccessToken = async (
+  code: string
+): Promise<string | undefined> => {
+  const response = await axios.get(
+    `https://connect.deezer.com/oauth/access_token.php?app_id=${process.env.DEEZER_APP_ID}` +
+      `&secret=${process.env.DEEZER_KEY}` +
+      `&code=${code}` +
+      `&output=json`
+  );
+  const accessToken = response.data.access_token;
+  return accessToken;
 };
