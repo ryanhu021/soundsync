@@ -6,6 +6,7 @@ import Floatinglabel from "react-bootstrap/FloatingLabel";
 import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { BackLink } from "../components/back-link";
+import "../component-styles/login-signup.css";
 
 type Inputs = {
   name: string;
@@ -45,48 +46,54 @@ function SignUpForm() {
 
   return (
     <Container>
-      <BackLink />
-      <h1>Sign Up Page</h1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Floatinglabel className="mb-3" label="Name">
-          <Form.Control
-            type="name"
-            placeholder="Name"
-            required
-            {...register("name")}
-          />
-        </Floatinglabel>
-        <Floatinglabel className="mb-3" label="Email">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            required
-            {...register("email")}
-          />
-        </Floatinglabel>
-        <Floatinglabel className="mb-3" label="Password">
-          <Form.Control
-            type="password"
-            placeholder="Password"
-            required
-            {...register("password")}
-          />
-        </Floatinglabel>
-        <Floatinglabel className="mb-3" label="Confirm Password">
-          <Form.Control
-            type="password"
-            placeholder="Confirm Password"
-            required
-            {...register("confirmPassword", {
-              validate: (value) => value === getValues().password,
-            })}
-          />
-          {errors.confirmPassword && <p>Password must match.</p>}
-        </Floatinglabel>
-        <Button variant="primary" type="submit">
-          SignUp
-        </Button>
-      </Form>
+      <div className="wrapper">
+        <BackLink />
+        <h1 className="title">Sign Up Page</h1>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Floatinglabel className="mb-3" label="Name">
+            <Form.Control
+              type="name"
+              placeholder="Name"
+              required
+              {...register("name")}
+              className="field"
+            />
+          </Floatinglabel>
+          <Floatinglabel className="mb-3" label="Email">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              required
+              {...register("email")}
+              className="field"
+            />
+          </Floatinglabel>
+          <Floatinglabel className="mb-3" label="Password">
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              required
+              {...register("password")}
+              className="field"
+            />
+          </Floatinglabel>
+          <Floatinglabel className="mb-3" label="Confirm Password">
+            <Form.Control
+              type="password"
+              placeholder="Confirm Password"
+              required
+              {...register("confirmPassword", {
+                validate: (value) => value === getValues().password,
+              })}
+              className="field"
+            />
+            {errors.confirmPassword && <p>Password must match.</p>}
+          </Floatinglabel>
+          <Button variant="primary" type="submit" className="field">
+            Sign Up
+          </Button>
+        </Form>
+      </div>
     </Container>
   );
 }

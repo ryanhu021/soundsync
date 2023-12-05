@@ -7,6 +7,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { BackLink } from "../components/back-link";
+import "../component-styles/login-signup.css";
 
 type Inputs = {
   email: string;
@@ -48,35 +49,41 @@ function LoginForm() {
 
   return (
     <Container>
-      <BackLink />
-      <h1>Login Page</h1>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Floatinglabel className="mb-3" label="Email">
-          <Form.Control
-            type="email"
-            placeholder="Email"
-            required
-            {...register("email")}
-          />
-        </Floatinglabel>
-        <Floatinglabel className="mb-3" label="Password">
-          <Form.Control
-            type="password"
-            placeholder="password"
-            required
-            {...register("password")}
-          />
-        </Floatinglabel>
-        <p>{errorMessage}</p>
-        <Row>
-          <Button variant="primary" type="submit">
-            Login
-          </Button>
-        </Row>
-        <Row>
-          <Link to="/signup">Create Account</Link>
-        </Row>
-      </Form>
+      <div className="wrapper">
+        <BackLink />
+        <h1 className="title">Login Page</h1>
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Floatinglabel className="mb-3" label="Email">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              required
+              {...register("email")}
+              className="field"
+            />
+          </Floatinglabel>
+          <Floatinglabel className="mb-3" label="Password">
+            <Form.Control
+              type="password"
+              placeholder="password"
+              required
+              {...register("password")}
+              className="field"
+            />
+          </Floatinglabel>
+          <p>{errorMessage}</p>
+          <Row>
+            <Button variant="primary" type="submit" className="field">
+              Login
+            </Button>
+          </Row>
+          <Row>
+            <Link to="/signup" className="signup-link">
+              Create Account
+            </Link>
+          </Row>
+        </Form>
+      </div>
     </Container>
   );
 }
