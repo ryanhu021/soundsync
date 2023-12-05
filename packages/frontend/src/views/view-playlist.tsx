@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Alert } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import SearchBar from "../components/search-bar";
 import SongCard from "../components/song-card";
 import SpotifyExport from "../components/spotify-export";
 import { useAuth } from "../auth/auth-provider";
 import { Playlist } from "./playlists";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { BackLink } from "../components/back-link";
 import FullScreenSpinner from "../components/full-screen-spinner";
 import DeezerExport from "../components/deezer-export";
@@ -27,6 +27,11 @@ type Inputs = {
 export default function ViewPlaylist() {
   const { user } = useAuth();
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const exported = searchParams.get("exported");
+  const url = searchParams.get("url");
+  const count = searchParams.get("count");
+  const exportError = searchParams.get("error");
   const { register, handleSubmit } = useForm<Inputs>();
   const [playlist, setPlaylist] = useState<Playlist>({
     _id: "",
@@ -165,6 +170,25 @@ export default function ViewPlaylist() {
       });
   };
 
+  const getExportAlert = (): JSX.Element => {
+    if (exported) {
+      if (exportError) {
+        return (
+          <Alert variant="danger" dismissible>
+            Error exporting playlist to {exported}. Please try again.
+          </Alert>
+        );
+      }
+      // with url
+      return (
+        <Alert variant="success" dismissible>
+          Successfully exported {count} songs to {exported}: {url}
+        </Alert>
+      );
+    }
+    return <></>;
+  };
+
   if (loading) {
     return <FullScreenSpinner />;
   }
@@ -172,6 +196,7 @@ export default function ViewPlaylist() {
   return (
     <Container>
       <BackLink to="/playlists" />
+      {getExportAlert()}
       <h1>{playlist.name}</h1>
       {playlist.creatorName === user.name && (
         <Form className="d-flex" onSubmit={handleSubmit(rename)}>
@@ -194,7 +219,7 @@ export default function ViewPlaylist() {
       )}
       <strong>By: {playlist.creatorName}</strong>
       <p>{new Date(playlist.dateCreated).toLocaleDateString()}</p>
-      <SpotifyExport />
+      <SpotifyExport playlistId={playlist._id} />
       <DeezerExport playlistId={playlist._id} />
       {playlist.creatorName === user.name && (
         <div>
