@@ -95,7 +95,10 @@ const createPlaylistWithTracks = async (
   console.log(id + " " + typeof id);
   try {
     const response = await axios.post(
-      `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title="${playlistName}"`
+      `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${playlistName.replace(
+        " ",
+        "%20"
+      )}`
     );
 
     const playlistId = response.data.id;
