@@ -95,7 +95,7 @@ const createPlaylistWithTracks = async (
   console.log(id + " " + typeof id);
   try {
     const response = await axios.post(
-      `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${playlistName}`
+      `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title="${playlistName}"`
     );
 
     const playlistId = response.data.id;
@@ -174,7 +174,7 @@ const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
     return `${getSongIdFromUrl(song.providerUrl)}`;
   }
   const searchResponse = await axios.get(
-    `https://api.deezer.com/search?q="${song.name} ${song.artist} ${song.album}`,
+    `https://api.deezer.com/search?q="${song.name} ${song.artist} ${song.album}"`,
     {
       params: {
         apikey: process.env.DEEZER_KEY,
