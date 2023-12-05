@@ -26,6 +26,11 @@ export const createPlaylist = async (
 ) => {
   const creator = user?._id;
   const creatorName = user?.name;
+  const username = await User.findById(creator);
+  if (!username) {
+    return Promise.reject({ message: "User not found", status: 404 });
+  }
+
   const playlist = new Playlist({
     name,
     creator,
@@ -35,10 +40,6 @@ export const createPlaylist = async (
   const newPlaylist = await playlist.save();
 
   // add playlist to user
-  const username = await User.findById(creator);
-  if (!username) {
-    return Promise.reject({ message: "User not found", status: 404 });
-  }
   username.playlists.push(newPlaylist._id);
   await username.save();
   return newPlaylist;
