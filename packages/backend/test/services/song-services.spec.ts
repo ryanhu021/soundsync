@@ -8,7 +8,7 @@ import { Song } from "../../src/models/song-model";
 
 jest.mock("../../src/models/song-model");
 
-const MOCK_SONG = {
+export const MOCK_SONG = {
   _id: "song123",
   name: "Song Name",
   artist: "Artist Name",

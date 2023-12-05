@@ -24,7 +24,7 @@ const MOCK_USER = {
 const MOCK_NAME = "Old Playlist Name";
 const MOCK_SONGS = ["song123", "song456"];
 const MOCK_IMAGE_URL = "songImageUrl";
-const MOCK_PLAYLIST = {
+export const MOCK_PLAYLIST = {
   _id: MOCK_PLAYLIST_ID,
   creator: MOCK_USER._id,
   name: MOCK_NAME,
