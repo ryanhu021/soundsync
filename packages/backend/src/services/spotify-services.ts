@@ -113,7 +113,7 @@ const createNewPlaylistWithTracks = async (
     throw new Error("Failed to create playlist");
   }
   const addTracksResponse = await spotifyApi.addTracksToPlaylist(
-    createPlaylistResponse.body?.id,
+    createPlaylistResponse.body.id,
     trackUris
   );
   if (addTracksResponse.statusCode !== 201) {
