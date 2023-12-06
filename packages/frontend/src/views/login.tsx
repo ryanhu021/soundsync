@@ -71,7 +71,7 @@ function LoginForm() {
               className="field"
             />
           </Floatinglabel>
-          <p>{errorMessage}</p>
+          <p className="error-message">{errorMessage}</p>
           <Row>
             <Button variant="primary" type="submit" className="field">
               Login

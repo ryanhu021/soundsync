@@ -7,6 +7,10 @@
   color: white;
 }
 
+.error-message {
+  color: red;
+}
+
 .wrapper .title {
   font-size: 35px;
   font-weight: 600;
