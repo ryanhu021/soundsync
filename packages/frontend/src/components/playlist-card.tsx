@@ -33,8 +33,7 @@ function PlaylistCard(props: PlaylistCardProps) {
           </Row>
           <Row>
             <div>
-              <h5 className="playlist-info">{props.name}</h5>
-              <p className="playlist-creator">{props.creator}</p>
+              <h5 className="playlist-info my-3">{props.name}</h5>
             </div>
           </Row>
           <Col className="playlist-actions">
