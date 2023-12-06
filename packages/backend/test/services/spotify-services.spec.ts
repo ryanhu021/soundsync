@@ -68,7 +68,7 @@ const MOCK_ADD_TRACKS_TO_PLAYLIST_RESPONSE = {
   statusCode: 201,
 };
 
-const MOCK_SPOTIFY_TRACK: Track | Song = {
+export const MOCK_SPOTIFY_TRACK: Track | Song = {
   name: MOCK_TITLE,
   artist: MOCK_ARTIST_NAME,
   album: MOCK_ALBUM_NAME,
@@ -76,11 +76,11 @@ const MOCK_SPOTIFY_TRACK: Track | Song = {
   imageUrl: MOCK_IMAGE_URL,
 };
 
-const MOCK_DEEZER_TRACK: Track | Song = {
+export const MOCK_DEEZER_TRACK: Track | Song = {
   name: MOCK_TITLE,
   artist: MOCK_ARTIST_NAME,
   album: MOCK_ALBUM_NAME,
-  providerUrl: "https://deezer.page.link/123",
+  providerUrl: "https://deezer.com/track/123",
   imageUrl: MOCK_IMAGE_URL,
 };
 

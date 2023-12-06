@@ -89,6 +89,51 @@ export const getAccessToken = async (
   return accessToken;
 };
 
+const getUserId = async (token: string): Promise<string | null> => {
+  try {
+    const res = await axios.get(`https://api.deezer.com/user/me`, {
+      params: {
+        access_token: token,
+      },
+    });
+    return res.data.id;
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
+
+const fetchTrackUrisFromPlaylist = async (
+  playlist: Playlist
+): Promise<string[]> =>
+  (
+    await Promise.all(
+      playlist.songs.map((songId) =>
+        Song.findById(songId).then((song) => song && getTrackUriFromSong(song))
+      )
+    )
+  ).filter((trackId: string | null) => trackId !== null) as string[];
+
+const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
+  if (song.providerUrl.includes("deezer")) {
+    return `${getSongIdFromUrl(song.providerUrl)}`;
+  }
+  const searchResponse = await axios.get(
+    `https://api.deezer.com/search?q="${song.name} ${song.artist} ${song.album}"`,
+    {
+      params: {
+        apikey: process.env.DEEZER_KEY,
+        limit: 1,
+      },
+    }
+  );
+  if (searchResponse.data.data.length) {
+    return `${searchResponse.data.data[0].id}`;
+  }
+
+  return null;
+};
+
 const createPlaylistWithTracks = async (
   playlistName: string,
   tracks: string[],
@@ -100,6 +145,7 @@ const createPlaylistWithTracks = async (
     const createResponse = await axios.post(
       `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${title}`
     );
+    console.log(createResponse);
     if (createResponse.status !== 200) {
       throw new Error("Failed to create playlist");
     }
@@ -146,52 +192,4 @@ export const deezerExport = async (
     console.error(error);
     return Promise.reject(error);
   }
-};
-
-const getUserId = async (token: string): Promise<string | null> => {
-  try {
-    const res = await axios.get(`https://api.deezer.com/user/me`, {
-      params: {
-        access_token: token,
-      },
-    });
-    if (res.data.id && typeof res.data.id === "number") {
-      return res.data.id.toString();
-    }
-    return res.data.id;
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
-};
-
-const fetchTrackUrisFromPlaylist = async (
-  playlist: Playlist
-): Promise<string[]> =>
-  (
-    await Promise.all(
-      playlist.songs.map((songId) =>
-        Song.findById(songId).then((song) => song && getTrackUriFromSong(song))
-      )
-    )
-  ).filter((trackId: string | null) => trackId !== null) as string[];
-
-const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
-  if (song.providerUrl.includes("deezer")) {
-    return `${getSongIdFromUrl(song.providerUrl)}`;
-  }
-  const searchResponse = await axios.get(
-    `https://api.deezer.com/search?q="${song.name} ${song.artist} ${song.album}"`,
-    {
-      params: {
-        apikey: process.env.DEEZER_KEY,
-        limit: 1,
-      },
-    }
-  );
-  if (searchResponse.data.data.length) {
-    return `${searchResponse.data.data[0].id}`;
-  }
-
-  return null;
 };
