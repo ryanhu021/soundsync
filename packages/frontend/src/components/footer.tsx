@@ -9,12 +9,6 @@ export default function Footer() {
       © 2023 SoundSync | A cross-platform playlist manager | All rights
       reserved.
       <br />
-      {/* <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      > */}
       <a
         href="https://github.com/ryanhu021/csc307-team-project"
         target="_blank"
@@ -26,13 +20,12 @@ export default function Footer() {
       <div>
         <Link
           className={"text-white-50"}
-          style={{ textDecoration: "none" }}
+          style={{ fontSize: "0.9rem" }}
           to="/help"
         >
           Help
         </Link>
       </div>
-      {/* </div> */}
     </footer>
   );
 }
