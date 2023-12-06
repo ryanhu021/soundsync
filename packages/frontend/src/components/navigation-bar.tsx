@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Button, Container } from "react-bootstrap";
+import { Navbar, Nav, Button, Container, Image } from "react-bootstrap";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../auth/auth-provider";
 
@@ -27,7 +27,11 @@ function NavigationBar() {
       <Container fluid>
         <Link to="/">
           <Navbar.Brand>
-            <img src="sslogo.png" width={85} height={85}></img>
+            <Image
+              src="/sslogo.png"
+              alt="brand"
+              style={{ width: "85px", height: "85px" }}
+            />
           </Navbar.Brand>
         </Link>
         <Navbar.Toggle aria-controls="responsive-navbar-nav"></Navbar.Toggle>
