@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Floatinglabel from "react-bootstrap/FloatingLabel";
-import { useNavigate } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { BackLink } from "../components/back-link";
 import "../component-styles/login-signup.css";
@@ -16,16 +15,16 @@ type Inputs = {
 };
 
 function SignUpForm() {
+  const [error, setError] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
     getValues,
   } = useForm<Inputs>();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
+    setError("");
     fetch(`${process.env.REACT_APP_SERVER_URL}/user/register`, {
       method: "POST",
       body: JSON.stringify({
@@ -38,7 +37,14 @@ function SignUpForm() {
         "Content-Type": "application/json",
       },
     })
-      .then(async (res) => res.status === 201 && (window.location.href = "/"))
+      .then(async (res) => {
+        if (res.status === 201) {
+          window.location.href = "/";
+        } else {
+          const error = await res.json();
+          setError(error.error);
+        }
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -87,7 +93,10 @@ function SignUpForm() {
               })}
               className="field"
             />
-            {errors.confirmPassword && <p>Password must match.</p>}
+            {(errors.confirmPassword && (
+              <p className="error-message">Password must match.</p>
+            )) ||
+              (error && <p className="error-message">{error}</p>)}
           </Floatinglabel>
           <Button variant="primary" type="submit" className="field">
             Sign Up
