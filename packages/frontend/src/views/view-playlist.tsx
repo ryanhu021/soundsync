@@ -180,11 +180,16 @@ export default function ViewPlaylist() {
         );
       }
       // with url
-      return (
-        <Alert variant="success" dismissible>
-          Successfully exported {count} songs to {exported}: {url}
-        </Alert>
-      );
+      if (url) {
+        return (
+          <Alert variant="success" dismissible>
+            Successfully exported {count} songs to {exported}:{" "}
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {url}
+            </a>
+          </Alert>
+        );
+      }
     }
     return <></>;
   };
