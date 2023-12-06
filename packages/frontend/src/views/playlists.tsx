@@ -83,7 +83,7 @@ export default function Playlists() {
   }
 
   return (
-    <Container>
+    <Container className="mb-5">
       <BackLink />
       <h1 className="page-title">{user.name}&apos;s Playlists</h1>
       <div className="playlists-container">

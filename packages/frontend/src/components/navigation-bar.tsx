@@ -60,7 +60,12 @@ function NavigationBar() {
                   </Navbar.Text>
                 </Nav.Item>
                 <Nav.Link>
-                  <Button onClick={logout}>Log out</Button>
+                  <Button
+                    style={{ backgroundColor: "#5f6acf", color: "white" }}
+                    onClick={logout}
+                  >
+                    Log out
+                  </Button>
                 </Nav.Link>
               </>
             ) : (
