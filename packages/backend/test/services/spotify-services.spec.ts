@@ -199,9 +199,7 @@ describe("Spotify Services", () => {
       MOCK_API.searchTracks
         .mockResolvedValueOnce({
           body: {
-            tracks: {
-              items: [],
-            },
+            tracks: null,
           },
         })
         .mockResolvedValueOnce(MOCK_SEARCH_TRACKS_RESPONSE);
