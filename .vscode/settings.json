@@ -7,5 +7,7 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-  } 
+  },
+  "jest.rootPath": "./packages/backend",
+  "jest.autoRun": { "watch": false },
 }
