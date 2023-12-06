@@ -139,7 +139,8 @@ export default function Help() {
                         <ul>
                           <li>
                             For Spotify, right click on the song and select
-                            &quot;Copy Song Link&quot;.
+                            &quot;Copy Song Link&quot;. Or use the song link in
+                            the URL.
                             <br />
                             <img
                               src="spotifysong.png"
@@ -148,8 +149,8 @@ export default function Help() {
                           </li>
                           <br />
                           <li>
-                            For Deezer, right click on the song and select
-                            &quot;Copy Link&quot;.
+                            For Deezer, left click on the triple dots icon and
+                            select share. Then select &quot;Copy&quot;.
                             <br />
                             <img
                               src="deezersong.png"
