@@ -65,7 +65,7 @@ function LoginForm() {
           <Floatinglabel className="mb-3" label="Password">
             <Form.Control
               type="password"
-              placeholder="password"
+              placeholder="Password"
               required
               {...register("password")}
               className="field"
