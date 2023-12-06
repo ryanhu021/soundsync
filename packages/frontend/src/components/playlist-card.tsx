@@ -3,7 +3,6 @@ import { Card, Row, Col, Image } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Playlist } from "../views/playlists";
 import "../component-styles/playlist-card.css";
-import { faWindows } from "@fortawesome/free-brands-svg-icons";
 
 interface PlaylistCardProps extends Playlist {
   onDelete: React.MouseEventHandler<HTMLButtonElement>;
