@@ -9,29 +9,30 @@ export default function Footer() {
       © 2023 SoundSync | A cross-platform playlist manager | All rights
       reserved.
       <br />
-      <div
+      {/* <div
         style={{
           display: "flex",
           justifyContent: "center",
         }}
+      > */}
+      <a
+        href="https://github.com/ryanhu021/csc307-team-project"
+        target="_blank"
+        rel="noreferrer"
+        className={"text-white-50"}
       >
+        <FontAwesomeIcon icon={faGithub} />
+      </a>
+      <div>
         <Link
           className={"text-white-50"}
-          style={{ marginRight: "0.25rem", textDecoration: "none" }}
+          style={{ textDecoration: "none" }}
           to="/help"
         >
           Help
         </Link>
-        <a
-          href="https://github.com/ryanhu021/csc307-team-project"
-          target="_blank"
-          rel="noreferrer"
-          className={"text-white-50"}
-          style={{ marginLeft: "0.25rem" }}
-        >
-          <FontAwesomeIcon icon={faGithub} />
-        </a>
       </div>
+      {/* </div> */}
     </footer>
   );
 }

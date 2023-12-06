@@ -48,6 +48,7 @@ export default function Home() {
                 backgroundSize: "27rem",
                 marginTop: "1.5rem",
                 marginRight: "2rem",
+                border: "none",
               }}
             >
               <Card.Body>
@@ -73,6 +74,7 @@ export default function Home() {
                 backgroundImage: `url("vinyl.png")`,
                 backgroundSize: "37rem",
                 marginTop: "1.5rem",
+                border: "none",
               }}
             >
               <Card.Body>

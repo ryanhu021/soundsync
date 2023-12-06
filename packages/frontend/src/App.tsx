@@ -20,7 +20,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div style={{ minHeight: "91vh" }}>
+        <div style={{ minHeight: "88.2vh" }}>
           <NavigationBar />
           <Routes>
             <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
