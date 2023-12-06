@@ -61,6 +61,7 @@ describe("User Services", () => {
 
   describe("login", () => {
     it("should login a user and return a serialized token", async () => {
+      process.env.NODE_ENV = "production";
       User.findOne = jest.fn().mockResolvedValue(MOCK_USER);
       bcrypt.compare = jest.fn().mockResolvedValue(true);
       const result = await login(MOCK_EMAIL, MOCK_PASSWORD);
