@@ -16,6 +16,7 @@ export default function Footer() {
         }}
       >
         <Link
+          className={"text-white-50"}
           style={{ marginRight: "0.25rem", textDecoration: "none" }}
           to="/help"
         >
