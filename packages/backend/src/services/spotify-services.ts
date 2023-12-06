@@ -18,10 +18,10 @@ export type ExportResult = {
 const scopes = ["playlist-modify-public", "playlist-modify-private"];
 const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
 
-const spotifyApi = new SpotifyWebApi({
+export const spotifyApi = new SpotifyWebApi({
   redirectUri,
-  clientId: process.env.SPOTIFY_CLIENT_ID || "",
-  clientSecret: process.env.SPOTIFY_CLIENT_SECRET || "",
+  clientId: process.env.SPOTIFY_CLIENT_ID,
+  clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
 });
 
 // Function to extract song ID from Spotify URL
