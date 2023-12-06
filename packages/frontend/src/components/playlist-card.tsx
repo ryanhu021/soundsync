@@ -9,6 +9,13 @@ interface PlaylistCardProps extends Playlist {
 }
 
 function PlaylistCard(props: PlaylistCardProps) {
+  const share = () => {
+    navigator.clipboard.writeText(
+      `${window.location.origin}/playlists/view/${props._id}`
+    );
+    window.alert("Link copied to clipboard!");
+  };
+
   return (
     <div>
       <Card className="playlist-card">
@@ -31,7 +38,7 @@ function PlaylistCard(props: PlaylistCardProps) {
             </div>
           </Row>
           <Col className="playlist-actions">
-            <button>
+            <button onClick={share}>
               <Image src="/upload_icon.png" alt="upload" />
             </button>
             <button onClick={props.onDelete}>

@@ -8,6 +8,11 @@ interface SongCardProps extends Song {
 }
 
 function SongCard(props: SongCardProps) {
+  const share = () => {
+    navigator.clipboard.writeText(props.providerUrl);
+    window.alert("Link copied to clipboard!");
+  };
+
   return (
     <Card
       style={{
@@ -84,7 +89,10 @@ function SongCard(props: SongCardProps) {
               justifyContent: "space-between",
             }}
           >
-            <button style={{ border: "none", padding: 0, background: "none" }}>
+            <button
+              onClick={share}
+              style={{ border: "none", padding: 0, background: "none" }}
+            >
               <Image
                 src="/upload_icon.png"
                 alt="upload"
