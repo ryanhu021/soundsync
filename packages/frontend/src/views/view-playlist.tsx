@@ -223,7 +223,10 @@ export default function ViewPlaylist() {
         </Form>
       )}
       <strong>By: {playlist.creatorName}</strong>
-      <p>{new Date(playlist.dateCreated).toLocaleDateString()}</p>
+      <p>
+        {new Date(playlist.dateCreated).toLocaleDateString()}, {songs.length}{" "}
+        songs
+      </p>
       <SpotifyExport playlistId={playlist._id} />
       <DeezerExport playlistId={playlist._id} />
       {playlist.creatorName === user.name && (

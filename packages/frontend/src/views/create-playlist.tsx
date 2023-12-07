@@ -3,13 +3,14 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { BackLink } from "../components/back-link";
+import SpotifyImport from "../components/spotify-import";
 
 type Inputs = {
   name: string;
 };
 
 export default function CreatePlaylist() {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, handleSubmit, getValues } = useForm<Inputs>();
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -45,13 +46,15 @@ export default function CreatePlaylist() {
           type="name"
           className="me-2 rounded-pill"
           {...register("name")}
-          placeholder="Enter Playlist Name"
+          placeholder="Enter Playlist Name or URL"
           aria-describedby="submit"
+          required
         />
         <Button type="submit" className="rounded-pill">
           Submit
         </Button>
       </Form>
+      <SpotifyImport getPlaylistUrl={() => getValues("name")} />
       <p>{error}</p>
     </Container>
   );
