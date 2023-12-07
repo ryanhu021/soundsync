@@ -10,6 +10,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { BackLink } from "../components/back-link";
 import FullScreenSpinner from "../components/full-screen-spinner";
 import DeezerExport from "../components/deezer-export";
+import "../component-styles/view-playlist.css";
 
 export interface Song {
   _id: string;
@@ -200,40 +201,59 @@ export default function ViewPlaylist() {
 
   return (
     <Container>
-      <BackLink to="/playlists" />
-      {getExportAlert()}
-      <h1>{playlist.name}</h1>
-      {playlist.creatorName === user.name && (
-        <Form className="d-flex" onSubmit={handleSubmit(rename)}>
-          <Form.Control
-            type="name"
-            className="me-2 rounded-pill"
-            defaultValue={playlist.name}
-            {...register("name")}
-            placeholder="Enter Playlist Name"
-            aria-describedby="submit"
-          />
-          <Button
-            type="submit"
-            className="rounded-pill"
-            variant="outline-primary"
+      <div className="wrapper">
+        <BackLink to="/playlists" />
+        {getExportAlert()}
+        <h1 className="title">{playlist.name}</h1>
+        {playlist.creatorName === user.name && (
+          <Form
+            className="d-flex"
+            onSubmit={handleSubmit(rename)}
+            style={{ paddingBottom: "10px" }}
           >
-            Rename
-          </Button>
-        </Form>
-      )}
-      <strong>By: {playlist.creatorName}</strong>
-      <p>{new Date(playlist.dateCreated).toLocaleDateString()}</p>
-      <SpotifyExport playlistId={playlist._id} />
-      <DeezerExport playlistId={playlist._id} />
+            <Form.Control
+              type="name"
+              className="me-2 rounded-pill"
+              defaultValue={playlist.name}
+              {...register("name")}
+              placeholder="Enter Playlist Name"
+              aria-describedby="submit"
+            />
+            <Button
+              type="submit"
+              className="rounded-pill"
+              style={{
+                color: "#fff !important",
+                border: "2px solid #4158d0",
+                fontSize: "20px",
+                fontWeight: "500",
+                background: "linear-gradient(-135deg, #7a82c9, #bda0f3)",
+                transition: "all 0.3s ease",
+              }}
+            >
+              Rename
+            </Button>
+          </Form>
+        )}
+        <div className="d-flex flex-column justify-content-center">
+          <strong className="name">By: {playlist.creatorName}</strong>
+          <p className="date">
+            Date Created: {new Date(playlist.dateCreated).toLocaleDateString()}
+          </p>
+        </div>
+        <div className="d-flex justify-content-around">
+          <SpotifyExport playlistId={playlist._id} />
+          <DeezerExport playlistId={playlist._id} />
+        </div>
+      </div>
       {playlist.creatorName === user.name && (
-        <div>
-          <h3>Add Songs</h3>
+        <div className="wrapper">
+          <h3 className="subtitle">Add Songs</h3>
           <SearchBar onSongFetched={addSong} />
         </div>
       )}
-      <div>
-        <h4>Songs</h4>
+      <div className="wrapper">
+        <h4 className="subtitle">Songs</h4>
         {songs.map((song: Song, index: number) => (
           <SongCard key={index} onDelete={() => deleteSong(index)} {...song} />
         ))}

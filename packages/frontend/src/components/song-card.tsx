@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Stack, Image, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Song } from "../views/view-playlist";
+import "../component-styles/song-card.css";
 
 interface SongCardProps extends Song {
   onDelete: React.MouseEventHandler<HTMLButtonElement>;
@@ -14,12 +15,7 @@ function SongCard(props: SongCardProps) {
   };
 
   return (
-    <Card
-      style={{
-        width: "100%",
-        height: "5rem",
-      }}
-    >
+    <Card className="song-card">
       <Card.Body
         style={{
           padding: "0  0 0  0",
@@ -88,6 +84,7 @@ function SongCard(props: SongCardProps) {
               display: "flex",
               justifyContent: "space-between",
             }}
+            className="song-actions"
           >
             <button
               onClick={share}
@@ -96,10 +93,7 @@ function SongCard(props: SongCardProps) {
               <Image
                 src="/upload_icon.png"
                 alt="upload"
-                style={{
-                  width: "1rem",
-                  marginRight: "0.3rem",
-                }}
+                className="song-actions-images"
               />
             </button>
             <button
@@ -109,10 +103,7 @@ function SongCard(props: SongCardProps) {
               <Image
                 src="/delete_icon.png"
                 alt="delete"
-                style={{
-                  marginLeft: "0.3rem",
-                  width: "1rem",
-                }}
+                className="song-actions-images"
               />
             </button>
           </Col>
