@@ -22,14 +22,14 @@
   padding: 10px 30px 50px 30px;
 }
 
-.wrapper form .field {
+.wrapper form .field-create-playlist {
   height: 50px;
-  width: 30%;
+  max-width: 30%;
   margin-top: 1px;
   position: relative;
 }
 
-.wrapper form .field input {
+.wrapper form .field-create-playlist input {
   height: 100%;
   width: 100%;
   outline: none;
@@ -40,12 +40,12 @@
   transition: all 0.3s ease;
 }
 
-.wrapper form .field input:focus,
+.wrapper form .field-create-playlist input:focus,
 form .field input:valid {
   border-color: #4158d0;
 }
 
-.wrapper form .field label {
+.wrapper form .field-create-playlist label {
   position: absolute;
   top: 50%;
   left: 20px;
@@ -54,5 +54,16 @@ form .field input:valid {
   font-size: 17px;
   pointer-events: none;
   transform: translateY(-50%);
+  transition: all 0.3s ease;
+}
+
+.field-create-playlist {
+  color: #fff !important;
+  border: none;
+  margin-top: -10px;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  background: linear-gradient(-135deg, #7a82c9, #bda0f3);
   transition: all 0.3s ease;
 }
