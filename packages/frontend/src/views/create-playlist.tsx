@@ -47,6 +47,7 @@ export default function CreatePlaylist() {
           {...register("name")}
           placeholder="Enter Playlist Name"
           aria-describedby="submit"
+          required
         />
         <Button type="submit" className="rounded-pill">
           Submit

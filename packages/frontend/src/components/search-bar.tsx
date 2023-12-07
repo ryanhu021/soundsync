@@ -55,6 +55,7 @@ function SearchBar(props: SearchBarProps) {
           type="search"
           placeholder="Enter Song URL"
           className="me-2 rounded-pill"
+          required
           {...register("url")}
         />
         <Button
