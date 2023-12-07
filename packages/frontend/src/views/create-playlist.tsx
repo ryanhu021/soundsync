@@ -3,6 +3,7 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { BackLink } from "../components/back-link";
+import "../component-styles/create-playlist.css";
 
 type Inputs = {
   name: string;
@@ -38,22 +39,27 @@ export default function CreatePlaylist() {
 
   return (
     <Container>
-      <BackLink />
-      <h1>Create Playlist</h1>
-      <Form className="d-flex" onSubmit={handleSubmit(onSubmit)}>
-        <Form.Control
-          type="name"
-          className="me-2 rounded-pill"
-          {...register("name")}
-          placeholder="Enter Playlist Name"
-          aria-describedby="submit"
-          required
-        />
-        <Button type="submit" className="rounded-pill">
-          Submit
-        </Button>
-      </Form>
-      <p>{error}</p>
+      <div className="wrapper">
+        <BackLink />
+        <h1 className="title">Create Playlist</h1>
+        <Form
+          className="d-flex align-items-stretch"
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Form.Control
+            type="name"
+            className="me-2 rounded-pill"
+            {...register("name")}
+            placeholder="Enter Playlist Name"
+            aria-describedby="submit"
+            required
+          />
+          <Button type="submit" className="field-create-playlist">
+            Submit
+          </Button>
+        </Form>
+        <p>{error}</p>
+      </div>
     </Container>
   );
 }
