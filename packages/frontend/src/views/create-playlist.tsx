@@ -52,6 +52,7 @@ export default function CreatePlaylist() {
             {...register("name")}
             placeholder="Enter Playlist Name"
             aria-describedby="submit"
+            required
           />
           <Button type="submit" className="field-create-playlist">
             Submit

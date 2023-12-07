@@ -19,8 +19,14 @@ function AddPlaylistCard() {
           </Row>
           <Row>
             <div>
-              <h5 className="add-playlist-info">New Playlist</h5>
-              <p className="add-playlist-placeholder">&nbsp;</p>
+              <h5
+                className="add-playlist-info mt-3"
+                style={{
+                  marginBottom: "19.45px",
+                }}
+              >
+                New Playlist
+              </h5>
             </div>
           </Row>
         </Card.Body>
