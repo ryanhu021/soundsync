@@ -2,11 +2,13 @@ import {
   testIfValidDeezerLink,
   testIfValidSpotifyLink,
   getSong,
-  getSongByID,
+  getSongs,
 } from "../../src/services/song-services";
 import { Song } from "../../src/models/song-model";
+import { Playlist } from "../../src/models/playlist-model";
 
 jest.mock("../../src/models/song-model");
+jest.mock("../../src/models/playlist-model");
 
 export const MOCK_SONG = {
   _id: "song123",
@@ -15,6 +17,16 @@ export const MOCK_SONG = {
   album: "Album Name",
   providerUrl: "https://example.com/song",
   imageUrl: "https://example.com/song/image.jpg",
+};
+
+const MOCK_PLAYLIST = {
+  _id: "playlist123",
+  name: "Playlist Name",
+  creator: "user123",
+  songs: ["song123"],
+  imageUrl: "https://example.com/playlist/image.jpg",
+  save: jest.fn(),
+  deleteOne: jest.fn(),
 };
 
 describe("Song Services", () => {
@@ -73,25 +85,42 @@ describe("Song Services", () => {
     });
   });
 
-  describe("getSongByID", () => {
-    it("should return a song if found", async () => {
-      Song.findById = jest.fn().mockResolvedValue(MOCK_SONG);
+  describe("getSongs", () => {
+    it("should return the songs in the playlist", async () => {
+      Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
+      Song.find = jest.fn().mockResolvedValue([MOCK_SONG]);
 
-      const result = await getSongByID(MOCK_SONG._id);
+      const result = await getSongs(MOCK_PLAYLIST._id);
 
-      expect(result).toBe(MOCK_SONG);
-      expect(Song.findById).toHaveBeenCalledWith(MOCK_SONG._id);
+      expect(result).toEqual([MOCK_SONG]);
+      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
+      expect(Song.find).toHaveBeenCalledWith({
+        _id: { $in: MOCK_PLAYLIST.songs },
+      });
     });
+    it("should return an error if the playlist is not found", async () => {
+      Playlist.findById = jest.fn().mockResolvedValue(null);
 
-    it("should return an error if not found", async () => {
-      Song.findById = jest.fn().mockResolvedValue(null);
-
-      await expect(getSongByID(MOCK_SONG._id)).rejects.toEqual({
-        message: "Song not found",
+      await expect(getSongs(MOCK_PLAYLIST._id)).rejects.toEqual({
+        message: "Playlist not found",
         status: 404,
       });
 
-      expect(Song.findById).toHaveBeenCalledWith(MOCK_SONG._id);
+      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
+    });
+    it("should return an error if the songs are not found", async () => {
+      Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
+      Song.find = jest.fn().mockResolvedValue(null);
+
+      await expect(getSongs(MOCK_PLAYLIST._id)).rejects.toEqual({
+        message: "Songs not found",
+        status: 404,
+      });
+
+      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
+      expect(Song.find).toHaveBeenCalledWith({
+        _id: { $in: MOCK_PLAYLIST.songs },
+      });
     });
   });
 });
