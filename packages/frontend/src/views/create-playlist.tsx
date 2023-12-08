@@ -11,7 +11,7 @@ type Inputs = {
 };
 
 export default function CreatePlaylist() {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, handleSubmit, getValues } = useForm<Inputs>();
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
