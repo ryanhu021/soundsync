@@ -75,7 +75,6 @@ export default function DeezerCallback() {
         .then(async (res) => {
           if (res.status === 200) {
             const token = await res.json();
-            console.log(token.token);
             if (type === "import") {
               makeImportRequest(token.token, playlistId);
             } else {
