@@ -6,6 +6,7 @@ import "../component-styles/song-card.css";
 
 interface SongCardProps extends Song {
   onDelete: React.MouseEventHandler<HTMLButtonElement>;
+  canDelete: boolean;
 }
 
 function SongCard(props: SongCardProps) {
@@ -96,16 +97,18 @@ function SongCard(props: SongCardProps) {
                 className="song-actions-images"
               />
             </button>
-            <button
-              onClick={props.onDelete}
-              style={{ border: "none", padding: 0, background: "none" }}
-            >
-              <Image
-                src="/delete_icon.png"
-                alt="delete"
-                className="song-actions-images"
-              />
-            </button>
+            {props.canDelete && (
+              <button
+                onClick={props.onDelete}
+                style={{ border: "none", padding: 0, background: "none" }}
+              >
+                <Image
+                  src="/delete_icon.png"
+                  alt="delete"
+                  className="song-actions-images"
+                />
+              </button>
+            )}
           </Col>
         </Stack>
       </Card.Body>

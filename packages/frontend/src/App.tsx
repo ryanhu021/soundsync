@@ -65,20 +65,12 @@ function App() {
               />
               <Route
                 path="/auth/spotify/callback"
-                element={
-                  <ProtectedRoute>
-                    <SpotifyCallback />
-                  </ProtectedRoute>
-                }
+                element={<SpotifyCallback />}
                 errorElement={<ErrorPage />}
               />
               <Route
                 path="/auth/deezer/callback"
-                element={
-                  <ProtectedRoute>
-                    <DeezerCallback />
-                  </ProtectedRoute>
-                }
+                element={<DeezerCallback />}
                 errorElement={<ErrorPage />}
               />
             </Routes>

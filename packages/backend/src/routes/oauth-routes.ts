@@ -6,7 +6,7 @@ import { getAccessToken } from "../services/deezer-services";
 
 const router = express.Router();
 
-router.get("/spotify", auth, async (req, res) => {
+router.get("/spotify", async (req, res) => {
   if (
     !req.query.state ||
     typeof req.query.state !== "string" ||
@@ -19,7 +19,7 @@ router.get("/spotify", auth, async (req, res) => {
   res.send({ url: spotifyAuthUrl(req.query.state, req.query.type) });
 });
 
-router.get("/deezer", auth, async (req, res) => {
+router.get("/deezer", async (req, res) => {
   if (
     !req.query.state ||
     typeof req.query.state !== "string" ||
