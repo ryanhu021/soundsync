@@ -51,7 +51,7 @@ export default function CreatePlaylist() {
             type="name"
             className="me-2 rounded-pill"
             {...register("name")}
-            placeholder="Enter Playlist Name"
+            placeholder="Enter Playlist Name or URL"
             aria-describedby="submit"
             required
           />
@@ -59,7 +59,9 @@ export default function CreatePlaylist() {
             Submit
           </Button>
         </Form>
-        <SpotifyImport getPlaylistUrl={() => getValues("name")} />
+        <div className="d-flex justify-content-around pb-4">
+          <SpotifyImport getPlaylistUrl={() => getValues("name")} />
+        </div>
         <p>{error}</p>
       </div>
     </Container>

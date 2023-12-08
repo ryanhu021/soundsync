@@ -27,7 +27,7 @@ export default function SpotifyImport(props: SpotifyImportProps) {
   };
 
   return (
-    <Button className="rounded-pill" onClick={handleSubmit}>
+    <Button className="field-create-playlist" onClick={handleSubmit}>
       Import from Spotify
     </Button>
   );

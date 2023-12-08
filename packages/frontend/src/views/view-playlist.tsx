@@ -238,7 +238,7 @@ export default function ViewPlaylist() {
         <div className="d-flex flex-column justify-content-center">
           <strong className="name">By: {playlist.creatorName}</strong>
           <p className="date">
-            {songs.length} songs, created:{" "}
+            {songs.length} songs, created{" "}
             {new Date(playlist.dateCreated).toLocaleDateString()}
           </p>
         </div>
