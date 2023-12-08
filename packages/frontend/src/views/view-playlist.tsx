@@ -256,7 +256,12 @@ export default function ViewPlaylist() {
       <div className="wrapper">
         <h4 className="subtitle">Songs</h4>
         {songs.map((song: Song, index: number) => (
-          <SongCard key={index} onDelete={() => deleteSong(index)} {...song} />
+          <SongCard
+            key={index}
+            onDelete={() => deleteSong(index)}
+            {...song}
+            canDelete={playlist.creatorName === user.name}
+          />
         ))}
       </div>
       <p>{error}</p>
