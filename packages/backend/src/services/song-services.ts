@@ -1,4 +1,5 @@
 import { Song } from "../models/song-model";
+import { Playlist } from "../models/playlist-model";
 import { Track } from "../services/spotify-services";
 
 export const testIfValidDeezerLink = (url: string): boolean => {
@@ -22,10 +23,32 @@ export const getSong = async (result: Track): Promise<Song> => {
   }
 };
 
-export const getSongByID = async (id: string) => {
-  const song = await Song.findById(id);
-  if (!song) {
-    return Promise.reject({ message: "Song not found", status: 404 });
+export const getSongs = async (id: string) => {
+  const playlist = await Playlist.findById(id);
+  if (!playlist) {
+    return Promise.reject({ message: "Playlist not found", status: 404 });
   }
-  return song;
+  const songs = await Song.aggregate([
+    {
+      $match: {
+        _id: { $in: playlist.songs },
+      },
+    },
+    {
+      $addFields: {
+        __order: {
+          $indexOfArray: [playlist.songs, "$_id"],
+        },
+      },
+    },
+    {
+      $sort: {
+        __order: 1,
+      },
+    },
+  ]);
+  if (!songs) {
+    return Promise.reject({ message: "Songs not found", status: 404 });
+  }
+  return songs;
 };

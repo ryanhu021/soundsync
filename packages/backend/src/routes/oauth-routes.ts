@@ -7,11 +7,16 @@ import { getAccessToken } from "../services/deezer-services";
 const router = express.Router();
 
 router.get("/spotify", auth, async (req, res) => {
-  if (!req.query.playlistId || typeof req.query.playlistId !== "string") {
-    res.status(400).send({ error: "Missing state parameter" });
+  if (
+    !req.query.state ||
+    typeof req.query.state !== "string" ||
+    !req.query.type ||
+    typeof req.query.type !== "string"
+  ) {
+    res.status(400).send({ error: "Missing state or type parameter" });
     return;
   }
-  res.send({ url: spotifyAuthUrl(req.query.playlistId) });
+  res.send({ url: spotifyAuthUrl(req.query.state, req.query.type) });
 });
 
 router.get("/deezer", auth, async (req, res) => {

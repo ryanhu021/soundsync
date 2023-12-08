@@ -1,6 +1,9 @@
 import SpotifyWebApi from "spotify-web-api-node";
 import { Playlist } from "../models/playlist-model";
 import { Song } from "../models/song-model";
+import { getSong } from "./song-services";
+import { createPlaylist, updatePlaylistByID } from "./playlist-services";
+import { UserContext } from "../util/auth";
 
 export type Track = {
   name: string;
@@ -15,7 +18,14 @@ export type ExportResult = {
   count: number;
 };
 
-const scopes = ["playlist-modify-public", "playlist-modify-private"];
+const scopes = [
+  "playlist-modify-public",
+  "playlist-modify-private",
+  "playlist-read-private",
+  "playlist-read-collaborative",
+  "user-library-read",
+  "user-library-modify",
+];
 const redirectUri = `${process.env.CLIENT_URL}/auth/spotify/callback`;
 
 export const spotifyApi = new SpotifyWebApi({
@@ -152,6 +162,73 @@ export const spotifyExport = async (
   }
 };
 
-export const spotifyAuthUrl = (playlistId: string): string => {
-  return spotifyApi.createAuthorizeURL(scopes, playlistId);
+export const spotifyImport = async (
+  user: UserContext,
+  token: string,
+  playlistUrl: string
+): Promise<string> => {
+  try {
+    // authorize user
+    await authorizeUser(token);
+
+    // get playlist ID from URL
+    const playlistId = playlistUrl.split("/").pop();
+    if (!playlistId) {
+      throw new Error("Invalid playlist URL");
+    }
+
+    // fetch playlist
+    const playlist = await spotifyApi.getPlaylist(playlistId);
+    if (playlist.statusCode !== 200) {
+      throw new Error("Failed to fetch playlist");
+    }
+    const playlistName = playlist.body.name;
+
+    // fetch tracks
+    const tracks: Track[] = [];
+    let length = 0;
+    let hasNext = true;
+    while (hasNext) {
+      const nextTracks = await spotifyApi.getPlaylistTracks(playlistId, {
+        offset: length,
+      });
+      if (nextTracks.statusCode !== 200) {
+        throw new Error("Failed to fetch playlist");
+      }
+      tracks.push(
+        ...nextTracks.body.items
+          .map((item) => ({
+            name: item.track?.name || "",
+            artist: item.track?.artists[0].name || "",
+            album: item.track?.album.name || "",
+            providerUrl: item.track?.external_urls.spotify || "",
+            imageUrl: item.track?.album.images[0].url || "",
+          }))
+          .filter((track) => track.providerUrl)
+      );
+      length += nextTracks.body.items.length;
+      hasNext = !!nextTracks.body.next;
+    }
+
+    // convert tracks to Song objects
+    const songs = await Promise.all(tracks.map((track) => getSong(track)));
+
+    // create playlist in db
+    const newPlaylist = await createPlaylist(playlistName, user);
+    await updatePlaylistByID(
+      newPlaylist._id,
+      user,
+      undefined,
+      songs.map((song) => song._id)
+    );
+
+    return newPlaylist._id;
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
+
+export const spotifyAuthUrl = (state: string, type: string): string => {
+  return spotifyApi.createAuthorizeURL(scopes, [state, type].join(","));
 };
