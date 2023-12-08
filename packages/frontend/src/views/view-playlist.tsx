@@ -47,22 +47,22 @@ export default function ViewPlaylist() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const getSong = async (id: string) => {
-    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/song/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const getSongs = async (id: string) => {
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/song/all/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     if (res && res.status === 200) {
       return await res.json();
     } else {
       setError("Error getting songs");
     }
   };
-
-  const getSongs = async (ids: string[]) =>
-    await Promise.all(ids.map((id) => getSong(id)));
 
   useEffect(() => {
     fetch(`${process.env.REACT_APP_SERVER_URL}/playlist/${id}`, {
@@ -74,7 +74,7 @@ export default function ViewPlaylist() {
       .then(async (res) => {
         if (res.status === 200) {
           const playlist = await res.json();
-          setSongs(await getSongs(playlist.songs));
+          setSongs(await getSongs(playlist._id));
           setPlaylist(playlist);
         } else {
           setError("Error getting playlist");

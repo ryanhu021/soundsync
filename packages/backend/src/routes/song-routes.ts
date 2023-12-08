@@ -2,16 +2,16 @@ import express from "express";
 import { deezerUrlSearch } from "../services/deezer-services";
 import { spotifySongFetch } from "../services/spotify-services";
 import {
-  getSongByID,
   getSong,
   testIfValidDeezerLink,
   testIfValidSpotifyLink,
+  getSongs,
 } from "../services/song-services";
 
 const router = express.Router();
 
-router.get("/:id", async (req, res) => {
-  getSongByID(req.params.id)
+router.get("/all/:id", async (req, res) => {
+  getSongs(req.params.id)
     .then((result) => res.status(200).json(result))
     .catch((error) => res.status(error.status).send(error.message));
 });
