@@ -190,7 +190,7 @@ export const spotifyImport = async (
     let hasNext = true;
     while (hasNext) {
       const nextTracks = await spotifyApi.getPlaylistTracks(playlistId, {
-        offset: tracks.length,
+        offset: length,
       });
       if (nextTracks.statusCode !== 200) {
         throw new Error("Failed to fetch playlist");
@@ -212,8 +212,6 @@ export const spotifyImport = async (
 
     // convert tracks to Song objects
     const songs = await Promise.all(tracks.map((track) => getSong(track)));
-    console.log(songs.map((song) => song.name));
-    console.log(songs.length);
 
     // create playlist in db
     const newPlaylist = await createPlaylist(playlistName, user);

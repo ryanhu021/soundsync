@@ -145,7 +145,6 @@ const createPlaylistWithTracks = async (
     const createResponse = await axios.post(
       `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${title}`
     );
-    console.log(createResponse);
     if (createResponse.status !== 200) {
       throw new Error("Failed to create playlist");
     }
