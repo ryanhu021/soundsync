@@ -1,23 +1,32 @@
 import {
-  Track,
   spotifyApi,
-  spotifySongFetch,
   spotifyAuthUrl,
   spotifyExport,
+  spotifyImport,
+  spotifySongFetch,
 } from "../../src/services/spotify-services";
-import { MOCK_PLAYLIST } from "./playlist-services.spec";
 import { Song } from "../../src/models/song-model";
 import { Playlist } from "../../src/models/playlist-model";
+import * as songServices from "../../src/services/song-services";
+import * as playlistServices from "../../src/services/playlist-services";
+import {
+  MOCK_ALBUM_NAME,
+  MOCK_ARTIST_NAME,
+  MOCK_DEEZER_TRACK,
+  MOCK_IMAGE_URL,
+  MOCK_PLAYLIST,
+  MOCK_SPOTIFY_PROVIDER_URL,
+  MOCK_SPOTIFY_TRACK,
+  MOCK_TITLE,
+  MOCK_USER,
+} from "../shared-mocks";
 
 jest.mock("../../src/models/song-model");
 jest.mock("../../src/models/playlist-model");
+jest.mock("../../src/services/song-services");
+jest.mock("../../src/services/playlist-services");
 
 const MOCK_TRACK_ID = "123";
-const MOCK_TITLE = "Song Name";
-const MOCK_ARTIST_NAME = "Artist Name";
-const MOCK_ALBUM_NAME = "Album Title";
-const MOCK_PROVIDER_URL = "https://open.spotify.com/track/123";
-const MOCK_IMAGE_URL = "https://example.com/song/image.jpg";
 
 const MOCK_CLIENT_CREDENTIALS_GRANT_RESPONSE = {
   body: {
@@ -32,6 +41,9 @@ const MOCK_TRACK_INFO_RESPONSE = {
     album: {
       name: MOCK_ALBUM_NAME,
       images: [{ url: MOCK_IMAGE_URL }],
+    },
+    external_urls: {
+      spotify: MOCK_SPOTIFY_PROVIDER_URL,
     },
   },
 };
@@ -68,20 +80,40 @@ const MOCK_ADD_TRACKS_TO_PLAYLIST_RESPONSE = {
   statusCode: 201,
 };
 
-export const MOCK_SPOTIFY_TRACK: Track | Song = {
-  name: MOCK_TITLE,
-  artist: MOCK_ARTIST_NAME,
-  album: MOCK_ALBUM_NAME,
-  providerUrl: MOCK_PROVIDER_URL,
-  imageUrl: MOCK_IMAGE_URL,
+const MOCK_GET_PLAYLIST_RESPONSE = {
+  body: {
+    id: "mock-playlist-id",
+  },
+  statusCode: 200,
 };
 
-export const MOCK_DEEZER_TRACK: Track | Song = {
-  name: MOCK_TITLE,
-  artist: MOCK_ARTIST_NAME,
-  album: MOCK_ALBUM_NAME,
-  providerUrl: "https://deezer.com/track/123",
-  imageUrl: MOCK_IMAGE_URL,
+const MOCK_GET_PLAYLIST_TRACKS_RESPONSE = {
+  body: {
+    items: [
+      {
+        track: MOCK_TRACK_INFO_RESPONSE.body,
+      },
+      {
+        track: MOCK_TRACK_INFO_RESPONSE.body,
+      },
+    ],
+    next: true,
+  },
+  statusCode: 200,
+};
+
+const MOCK_GET_PLAYLIST_TRACKS_RESPONSE_END = {
+  body: {
+    items: [
+      {
+        track: MOCK_TRACK_INFO_RESPONSE.body,
+      },
+      {
+        track: MOCK_TRACK_INFO_RESPONSE.body,
+      },
+    ],
+  },
+  statusCode: 200,
 };
 
 const MOCK_API = {
@@ -107,6 +139,12 @@ const MOCK_API = {
   unfollowPlaylist: (
     jest.spyOn(spotifyApi, "unfollowPlaylist") as jest.SpyInstance
   ).mockResolvedValue({}),
+  getPlaylist: (
+    jest.spyOn(spotifyApi, "getPlaylist") as jest.SpyInstance
+  ).mockResolvedValue(MOCK_GET_PLAYLIST_RESPONSE),
+  getPlaylistTracks: (
+    jest.spyOn(spotifyApi, "getPlaylistTracks") as jest.SpyInstance
+  ).mockResolvedValue(MOCK_GET_PLAYLIST_TRACKS_RESPONSE_END),
 };
 
 describe("Spotify Services", () => {
@@ -114,11 +152,20 @@ describe("Spotify Services", () => {
     jest.clearAllMocks();
     Song.findById = jest.fn().mockResolvedValue(MOCK_SPOTIFY_TRACK);
     Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
+    (songServices.getSong as jest.Mock) = jest
+      .fn()
+      .mockResolvedValue(MOCK_SPOTIFY_TRACK);
+    (playlistServices.createPlaylist as jest.Mock) = jest
+      .fn()
+      .mockResolvedValue(MOCK_PLAYLIST);
+    (playlistServices.updatePlaylistByID as jest.Mock) = jest
+      .fn()
+      .mockResolvedValue(MOCK_PLAYLIST);
   });
 
   describe("spotifySongFetch", () => {
     it("should fetch and return track data from Spotify API", async () => {
-      const result = await spotifySongFetch(MOCK_PROVIDER_URL);
+      const result = await spotifySongFetch(MOCK_SPOTIFY_PROVIDER_URL);
 
       expect(result).toEqual(MOCK_SPOTIFY_TRACK);
       expect(MOCK_API.clientCredentialsGrant).toHaveBeenCalled();
@@ -143,7 +190,9 @@ describe("Spotify Services", () => {
     it("should throw an error if there is an error searching for songs", async () => {
       MOCK_API.getTrack.mockRejectedValueOnce(new Error("Mock Error"));
 
-      await expect(spotifySongFetch(MOCK_PROVIDER_URL)).rejects.toThrow();
+      await expect(
+        spotifySongFetch(MOCK_SPOTIFY_PROVIDER_URL)
+      ).rejects.toThrow();
 
       expect(MOCK_API.clientCredentialsGrant).toHaveBeenCalled();
       expect(MOCK_API.setAccessToken).toHaveBeenCalledWith(
@@ -259,13 +308,182 @@ describe("Spotify Services", () => {
     });
   });
 
+  describe("spotifyImport", () => {
+    it("should import a playlist from Spotify", async () => {
+      MOCK_API.getPlaylistTracks
+        .mockResolvedValueOnce(MOCK_GET_PLAYLIST_TRACKS_RESPONSE)
+        .mockResolvedValueOnce(MOCK_GET_PLAYLIST_TRACKS_RESPONSE_END);
+
+      const result = await spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      );
+
+      expect(result).toEqual(MOCK_PLAYLIST._id);
+    });
+  });
+
+  it("should throw an error if user authorization fails", async () => {
+    MOCK_API.authorizationCodeGrant.mockResolvedValueOnce({
+      statusCode: 500,
+    });
+
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
+    ).rejects.toThrow(new Error("Authorization failed"));
+  });
+
+  it("should throw an error if playlist URL is invalid", async () => {
+    await expect(spotifyImport(MOCK_USER, "mock-token", "")).rejects.toThrow(
+      new Error("Invalid URL")
+    );
+  });
+
+  it("should throw an error if playlist URL has no id", async () => {
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist"
+      )
+    ).rejects.toThrow(new Error("Invalid playlist URL"));
+  });
+
+  it("should throw an error if playlist fails to fetch", async () => {
+    MOCK_API.getPlaylist.mockResolvedValueOnce({
+      statusCode: 500,
+    });
+
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
+    ).rejects.toThrow(new Error("Failed to fetch playlist"));
+  });
+
+  it("should throw an error if playlist tracks fail to fetch", async () => {
+    MOCK_API.getPlaylistTracks.mockResolvedValueOnce({
+      statusCode: 500,
+    });
+
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
+    ).rejects.toThrow(new Error("Failed to fetch playlist"));
+  });
+
+  it("should throw an error if song conversion fails", async () => {
+    (songServices.getSong as jest.Mock).mockRejectedValueOnce(
+      new Error("Failed to convert song")
+    );
+
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
+    ).rejects.toThrow(new Error("Failed to convert song"));
+  });
+
+  it("should throw an error if playlist creation fails", async () => {
+    (playlistServices.createPlaylist as jest.Mock).mockRejectedValueOnce(
+      new Error("Failed to create playlist")
+    );
+
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
+    ).rejects.toThrow(new Error("Failed to create playlist"));
+  });
+
+  it("should throw an error if playlist update fails", async () => {
+    (playlistServices.updatePlaylistByID as jest.Mock).mockRejectedValueOnce(
+      new Error("Failed to update playlist")
+    );
+
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
+    ).rejects.toThrow(new Error("Failed to update playlist"));
+  });
+
+  it("should exclude empty songs", async () => {
+    MOCK_API.getPlaylistTracks
+      .mockResolvedValueOnce({
+        ...MOCK_GET_PLAYLIST_TRACKS_RESPONSE,
+        body: {
+          ...MOCK_GET_PLAYLIST_TRACKS_RESPONSE.body,
+          items: [
+            {
+              track: {
+                artists: [{}],
+                album: {
+                  images: [{}],
+                },
+                external_urls: {},
+              },
+            },
+          ],
+        },
+      })
+      .mockResolvedValueOnce(MOCK_GET_PLAYLIST_TRACKS_RESPONSE_END);
+
+    const result = await spotifyImport(
+      MOCK_USER,
+      "mock-token",
+      "https://open.spotify.com/playlist/123"
+    );
+
+    expect(result).toEqual(MOCK_PLAYLIST._id);
+    expect(songServices.getSong).toHaveBeenCalledTimes(2);
+  });
+
+  it("should exclude null tracks", async () => {
+    MOCK_API.getPlaylistTracks
+      .mockResolvedValueOnce({
+        ...MOCK_GET_PLAYLIST_TRACKS_RESPONSE,
+        body: {
+          ...MOCK_GET_PLAYLIST_TRACKS_RESPONSE.body,
+          items: [{}],
+        },
+      })
+      .mockResolvedValueOnce(MOCK_GET_PLAYLIST_TRACKS_RESPONSE_END);
+
+    const result = await spotifyImport(
+      MOCK_USER,
+      "mock-token",
+      "https://open.spotify.com/playlist/123"
+    );
+
+    expect(result).toEqual(MOCK_PLAYLIST._id);
+    expect(songServices.getSong).toHaveBeenCalledTimes(2);
+  });
+
   describe("spotifyAuthUrl", () => {
     it("should return a valid Spotify auth URL", () => {
       const state = "mock-state";
-      const result = spotifyAuthUrl(state);
+      const type = "export";
+      const result = spotifyAuthUrl(state, type);
 
       expect(result).toEqual(
-        `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${process.env.CLIENT_URL}/auth/spotify/callback&scope=playlist-modify-public%20playlist-modify-private&state=${state}`
+        `https://accounts.spotify.com/authorize?client_id=${process.env.SPOTIFY_CLIENT_ID}&response_type=code&redirect_uri=${process.env.CLIENT_URL}/auth/spotify/callback&scope=playlist-modify-public%20playlist-modify-private%20playlist-read-private%20playlist-read-collaborative%20user-library-read%20user-library-modify&state=mock-state,export`
       );
     });
   });

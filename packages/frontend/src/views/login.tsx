@@ -38,7 +38,6 @@ function LoginForm() {
         if (res.status === 200) {
           window.location.href = "/";
         } else {
-          console.log(res.statusText);
           setErrorMessage("Invalid email and/or password");
         }
       })
@@ -71,7 +70,7 @@ function LoginForm() {
               className="field"
             />
           </Floatinglabel>
-          <p>{errorMessage}</p>
+          <p className="error-message">{errorMessage}</p>
           <Row>
             <Button variant="primary" type="submit" className="field">
               Login

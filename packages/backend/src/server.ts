@@ -8,6 +8,7 @@ import playlistRouter from "./routes/playlist-routes";
 import songRouter from "./routes/song-routes";
 import oauthRouter from "./routes/oauth-routes";
 import exportRouter from "./routes/export-routes";
+import importRouter from "./routes/import-routes";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -50,6 +51,7 @@ app.use("/song", songRouter);
 app.use("/playlist", playlistRouter);
 app.use("/oauth", oauthRouter);
 app.use("/export", exportRouter);
+app.use("/import", importRouter);
 
 //running the server
 app.listen(process.env.PORT, () => {
