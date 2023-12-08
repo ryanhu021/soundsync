@@ -88,12 +88,31 @@ describe("Song Services", () => {
   describe("getSongs", () => {
     it("should return the songs in the playlist", async () => {
       Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
-      Song.findById = jest.fn().mockResolvedValue(MOCK_SONG);
+      Song.aggregate = jest.fn().mockResolvedValue(MOCK_SONG);
 
       const result = await getSongs(MOCK_PLAYLIST._id);
 
-      expect(result).toEqual([MOCK_SONG]);
+      expect(result).toBe(MOCK_SONG);
       expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
+      expect(Song.aggregate).toHaveBeenCalledWith([
+        {
+          $match: {
+            _id: { $in: MOCK_PLAYLIST.songs },
+          },
+        },
+        {
+          $addFields: {
+            __order: {
+              $indexOfArray: [MOCK_PLAYLIST.songs, "$_id"],
+            },
+          },
+        },
+        {
+          $sort: {
+            __order: 1,
+          },
+        },
+      ]);
     });
 
     it("should return an error if the playlist is not found", async () => {
@@ -103,20 +122,16 @@ describe("Song Services", () => {
         message: "Playlist not found",
         status: 404,
       });
-
-      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
     });
 
     it("should return an error if the songs are not found", async () => {
       Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
-      Song.findById = jest.fn().mockRejectedValue(new Error("Songs not found"));
+      Song.aggregate = jest.fn().mockResolvedValue(null);
 
       await expect(getSongs(MOCK_PLAYLIST._id)).rejects.toEqual({
-        message: "Internal server error",
-        status: 500,
+        message: "Songs not found",
+        status: 404,
       });
-
-      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
     });
   });
 });

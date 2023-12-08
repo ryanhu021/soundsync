@@ -37,7 +37,7 @@ const getSongIdFromUrl = (url: string): string | null => {
     : null;
 };
 
-const getPlaylistIdFromUrl = (url: string): string | null => {
+export const getPlaylistIdFromUrl = (url: string): string | null => {
   const urlObj = new URL(url);
   const pathSegments: string[] = urlObj.pathname.split("/");
   const trackIdIndex: number = pathSegments.indexOf("playlist");
@@ -213,7 +213,7 @@ export const deezerImport = async (
   user: UserContext,
   token: string,
   playlistUrl: string
-) => {
+): Promise<string> => {
   try {
     const userId = await getUserId(token);
     if (!userId) {
