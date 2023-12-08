@@ -5,10 +5,13 @@ import {
   getAccessToken,
   deezerExport,
 } from "../../src/services/deezer-services";
-import { MOCK_DEEZER_TRACK, MOCK_SPOTIFY_TRACK } from "./spotify-services.spec";
 import { Playlist } from "../../src/models/playlist-model";
-import { MOCK_PLAYLIST } from "./playlist-services.spec";
 import { Song } from "../../src/models/song-model";
+import {
+  MOCK_DEEZER_TRACK,
+  MOCK_PLAYLIST,
+  MOCK_SPOTIFY_TRACK,
+} from "../shared-mocks";
 
 jest.mock("axios");
 jest.mock("../../src/models/song-model");
@@ -23,136 +26,6 @@ const MOCK_PROVIDER_URL = "https://deezer.com/track/123";
 const MOCK_IMAGE_URL = "https://example.com/song/image.jpg";
 const MOCK_PLAYLIST_ID = "456";
 const MOCK_ACCESS_TOKEN = "mock-access-token";
-
-// functions to test:
-// export const deezerAuthUrl = (id: string): string => {
-//   return (
-//     `https://connect.deezer.com/oauth/auth.php?app_id=${process.env.DEEZER_APP_ID}` +
-//     `&redirect_uri=${redirectUri}` +
-//     `&perms=${scopes}` +
-//     `&state=${id}`
-//   );
-// };
-
-// export const getAccessToken = async (
-//   code: string
-// ): Promise<string | undefined> => {
-//   const response = await axios.get(
-//     `https://connect.deezer.com/oauth/access_token.php?app_id=${process.env.DEEZER_APP_ID}` +
-//       `&secret=${process.env.DEEZER_KEY}` +
-//       `&code=${code}` +
-//       `&output=json`
-//   );
-//   const accessToken = response.data.access_token;
-//   return accessToken;
-// };
-
-// const getUserId = async (token: string): Promise<string | null> => {
-//   try {
-//     const res = await axios.get(`https://api.deezer.com/user/me`, {
-//       params: {
-//         access_token: token,
-//       },
-//     });
-//     if (res.data.id && typeof res.data.id === "number") {
-//       return res.data.id.toString();
-//     }
-//     return res.data.id;
-//   } catch (error) {
-//     console.error(error);
-//     return Promise.reject(error);
-//   }
-// };
-
-// const fetchTrackUrisFromPlaylist = async (
-//   playlist: Playlist
-// ): Promise<string[]> =>
-//   (
-//     await Promise.all(
-//       playlist.songs.map((songId) =>
-//         Song.findById(songId).then((song) => song && getTrackUriFromSong(song))
-//       )
-//     )
-//   ).filter((trackId: string | null) => trackId !== null) as string[];
-
-// const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
-//   if (song.providerUrl.includes("deezer")) {
-//     return `${getSongIdFromUrl(song.providerUrl)}`;
-//   }
-//   const searchResponse = await axios.get(
-//     `https://api.deezer.com/search?q="${song.name} ${song.artist} ${song.album}"`,
-//     {
-//       params: {
-//         apikey: process.env.DEEZER_KEY,
-//         limit: 1,
-//       },
-//     }
-//   );
-//   if (searchResponse.data.data.length) {
-//     return `${searchResponse.data.data[0].id}`;
-//   }
-
-//   return null;
-// };
-
-// const createPlaylistWithTracks = async (
-//   playlistName: string,
-//   tracks: string[],
-//   token: string,
-//   id: string
-// ): Promise<string> => {
-//   const title = encodeURIComponent(playlistName);
-//   try {
-//     const createResponse = await axios.post(
-//       `https://api.deezer.com/user/${id}/playlists?access_token=${token}&title=${title}`
-//     );
-//     if (createResponse.status !== 200) {
-//       throw new Error("Failed to create playlist");
-//     }
-
-//     const playlistId = createResponse.data.id;
-
-//     const addResponse = await axios.post(
-//       `https://api.deezer.com/playlist/${playlistId}/tracks?access_token=${token}&songs=${tracks.join()}`
-//     );
-//     if (addResponse.status !== 200) {
-//       throw new Error("Failed to add songs to playlist");
-//     }
-
-//     return `https://www.deezer.com/playlist/${playlistId}`;
-//   } catch (error) {
-//     console.error(error);
-//     return Promise.reject(error);
-//   }
-// };
-
-// export const deezerExport = async (
-//   token: string,
-//   playlistId: string
-// ): Promise<ExportResult> => {
-//   try {
-//     const userId = await getUserId(token);
-//     if (!userId) {
-//       throw new Error("User ID not found");
-//     }
-
-//     const playlist = await Playlist.findById(playlistId);
-//     if (!playlist) {
-//       throw new Error("Playlist not found");
-//     }
-//     const tracks = await fetchTrackUrisFromPlaylist(playlist);
-//     const playlistUrl = await createPlaylistWithTracks(
-//       playlist.name,
-//       tracks,
-//       token,
-//       userId
-//     );
-//     return { url: playlistUrl, count: tracks.length };
-//   } catch (error) {
-//     console.error(error);
-//     return Promise.reject(error);
-//   }
-// };
 
 const MOCK_REDIRECT_RESPONSE = {
   request: {

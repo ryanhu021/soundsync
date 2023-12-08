@@ -28,8 +28,25 @@ export const getSongs = async (id: string) => {
   if (!playlist) {
     return Promise.reject({ message: "Playlist not found", status: 404 });
   }
-  console.log(playlist.songs);
-  const songs = await Song.find({ _id: { $in: playlist.songs } });
+  const songs = await Song.aggregate([
+    {
+      $match: {
+        _id: { $in: playlist.songs },
+      },
+    },
+    {
+      $addFields: {
+        __order: {
+          $indexOfArray: [playlist.songs, "$_id"],
+        },
+      },
+    },
+    {
+      $sort: {
+        __order: 1,
+      },
+    },
+  ]);
   if (!songs) {
     return Promise.reject({ message: "Songs not found", status: 404 });
   }

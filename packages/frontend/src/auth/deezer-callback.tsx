@@ -25,7 +25,6 @@ export default function DeezerCallback() {
         .then(async (res) => {
           if (res.status === 200) {
             const token = await res.json();
-            console.log(token.token);
             fetch(`${process.env.REACT_APP_SERVER_URL}/export/deezer`, {
               method: "POST",
               headers: {
@@ -37,7 +36,6 @@ export default function DeezerCallback() {
               .then(async (res) => {
                 if (res.status === 200) {
                   const { url, count } = await res.json();
-                  console.log(url);
                   navigate(
                     `/playlists/view/${playlistId}?exported=deezer&url=${url}&count=${count}`
                   );
