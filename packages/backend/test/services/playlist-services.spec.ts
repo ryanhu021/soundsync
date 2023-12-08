@@ -8,31 +8,18 @@ import {
 import { Playlist } from "../../src/models/playlist-model";
 import { Song } from "../../src/models/song-model";
 import { User } from "../../src/models/user-model";
+import {
+  MOCK_IMAGE_URL,
+  MOCK_NAME,
+  MOCK_PLAYLIST,
+  MOCK_PLAYLIST_ID,
+  MOCK_SONGS,
+  MOCK_USER,
+} from "../shared-mocks";
 
 jest.mock("../../src/models/user-model");
 jest.mock("../../src/models/playlist-model");
 jest.mock("../../src/models/song-model");
-
-const MOCK_PLAYLIST_ID = "playlist123";
-const MOCK_USER = {
-  _id: "user123",
-  name: "John Doe",
-  email: "johndoe@example.com",
-  playlists: [],
-  save: jest.fn(),
-};
-const MOCK_NAME = "Old Playlist Name";
-const MOCK_SONGS = ["song123", "song456"];
-const MOCK_IMAGE_URL = "songImageUrl";
-export const MOCK_PLAYLIST = {
-  _id: MOCK_PLAYLIST_ID,
-  creator: MOCK_USER._id,
-  name: MOCK_NAME,
-  songs: MOCK_SONGS,
-  imageUrl: MOCK_IMAGE_URL,
-  save: jest.fn(),
-  deleteOne: jest.fn(),
-};
 
 describe("Playlist Services", () => {
   beforeEach(() => {

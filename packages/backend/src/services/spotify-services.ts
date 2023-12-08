@@ -186,6 +186,7 @@ export const spotifyImport = async (
 
     // fetch tracks
     const tracks: Track[] = [];
+    let length = 0;
     let hasNext = true;
     while (hasNext) {
       const nextTracks = await spotifyApi.getPlaylistTracks(playlistId, {
@@ -195,14 +196,17 @@ export const spotifyImport = async (
         throw new Error("Failed to fetch playlist");
       }
       tracks.push(
-        ...nextTracks.body.items.map((item) => ({
-          name: item.track?.name || "",
-          artist: item.track?.artists[0].name || "",
-          album: item.track?.album.name || "",
-          providerUrl: item.track?.external_urls.spotify || "",
-          imageUrl: item.track?.album.images[0].url || "",
-        }))
+        ...nextTracks.body.items
+          .map((item) => ({
+            name: item.track?.name || "",
+            artist: item.track?.artists[0].name || "",
+            album: item.track?.album.name || "",
+            providerUrl: item.track?.external_urls.spotify || "",
+            imageUrl: item.track?.album.images[0].url || "",
+          }))
+          .filter((track) => track.providerUrl)
       );
+      length = nextTracks.body.items.length;
       hasNext = !!nextTracks.body.next;
     }
 
