@@ -45,15 +45,15 @@ export default function SpotifyCallback() {
         if (res.status === 200) {
           const { url, count } = await res.json();
           navigate(
-            `/playlists/view/${state}?exported=spotify&url=${url}&count=${count}`
+            `/playlists/view/${playlistId}?exported=spotify&url=${url}&count=${count}`
           );
         } else {
-          navigate(`/playlists/view/${state}?exported=spotify&error=true`);
+          navigate(`/playlists/view/${playlistId}?exported=spotify&error=true`);
         }
       })
       .catch((err) => {
         console.log(err);
-        navigate(`/playlists/view/${state}?exported=spotify&error=true`);
+        navigate(`/playlists/view/${playlistId}?exported=spotify&error=true`);
       });
   };
 
