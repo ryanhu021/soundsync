@@ -266,9 +266,7 @@ describe("Deezer Services", () => {
         .fn()
         .mockResolvedValueOnce(MOCK_USER_ID_RESPONSE)
         .mockResolvedValueOnce({
-          data: {
-            data: [],
-          },
+          data: {},
         });
       axios.post = jest
         .fn()

@@ -61,8 +61,8 @@ export default function CreatePlaylist() {
           </Button>
         </Form>
         <div className="d-flex justify-content-around pb-4">
-          <DeezerImport getPlaylistUrl={() => getValues("name")} />
           <SpotifyImport getPlaylistUrl={() => getValues("name")} />
+          <DeezerImport getPlaylistUrl={() => getValues("name")} />
         </div>
         <p>{error}</p>
       </div>

@@ -143,7 +143,7 @@ const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
       },
     }
   );
-  if (searchResponse.data.data.length) {
+  if (searchResponse.data.data?.length) {
     return `${searchResponse.data.data[0].id}`;
   }
 
