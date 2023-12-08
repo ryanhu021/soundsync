@@ -5,9 +5,59 @@ import FullScreenSpinner from "../components/full-screen-spinner";
 export default function DeezerCallback() {
   const [searchParams] = useSearchParams();
   const code = searchParams.get("code");
-  const playlistId = searchParams.get("state");
+  const state = searchParams.get("state");
+  const playlistId = state?.split(",")[0];
+  const type = state?.split(",")[1];
   const [hasFetchedToken, setHasFetchedToken] = useState(false);
   const navigate = useNavigate();
+
+  const makeImportRequest = (token: string, playlistUrl: string): void => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/import/deezer`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ token, playlistUrl }),
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const playlistId = await res.json();
+          navigate(`/playlists/view/${playlistId}`);
+        } else {
+          navigate("/playlists/create");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate(`/playlists/view/${playlistUrl}?imported=deezer&error=true`);
+      });
+  };
+
+  const makeExportRequest = (token: string, playlistId: string): void => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/export/deezer`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ token, playlistId }),
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          const { url, count } = await res.json();
+          navigate(
+            `/playlists/view/${playlistId}?exported=deezer&url=${url}&count=${count}`
+          );
+        } else {
+          navigate(`/playlists/view/${playlistId}?exported=deezer&error=true`);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        navigate(`/playlists/view/${playlistId}?exported=deezer&error=true`);
+      });
+  };
 
   useEffect(() => {
     if (code && !hasFetchedToken && playlistId) {
@@ -26,33 +76,11 @@ export default function DeezerCallback() {
           if (res.status === 200) {
             const token = await res.json();
             console.log(token.token);
-            fetch(`${process.env.REACT_APP_SERVER_URL}/export/deezer`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              credentials: "include",
-              body: JSON.stringify({ token: token.token, playlistId }),
-            })
-              .then(async (res) => {
-                if (res.status === 200) {
-                  const { url, count } = await res.json();
-                  console.log(url);
-                  navigate(
-                    `/playlists/view/${playlistId}?exported=deezer&url=${url}&count=${count}`
-                  );
-                } else {
-                  navigate(
-                    `/playlists/view/${playlistId}?exported=deezer&error=true`
-                  );
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-                navigate(
-                  `/playlists/view/${playlistId}?exported=deezer&error=true`
-                );
-              });
+            if (type === "import") {
+              makeImportRequest(token.token, playlistId);
+            } else {
+              makeExportRequest(token.token, playlistId);
+            }
           } else {
             throw new Error("Error getting token");
           }
@@ -61,7 +89,7 @@ export default function DeezerCallback() {
           console.log(err);
         });
     }
-  }, [code, playlistId]);
+  }, [code, type, playlistId]);
 
   return <FullScreenSpinner />;
 }

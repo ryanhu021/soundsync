@@ -3,13 +3,14 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { BackLink } from "../components/back-link";
+import DeezerImport from "../components/deezer-import";
 
 type Inputs = {
   name: string;
 };
 
 export default function CreatePlaylist() {
-  const { register, handleSubmit } = useForm<Inputs>();
+  const { register, handleSubmit, getValues } = useForm<Inputs>();
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -53,6 +54,9 @@ export default function CreatePlaylist() {
           Submit
         </Button>
       </Form>
+      <div className="d-flex justify-content-around pb-4">
+        <DeezerImport getPlaylistUrl={() => getValues("name")} />
+      </div>
       <p>{error}</p>
     </Container>
   );
