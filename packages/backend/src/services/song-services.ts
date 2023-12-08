@@ -28,7 +28,6 @@ export const getSongs = async (id: string) => {
   if (!playlist) {
     return Promise.reject({ message: "Playlist not found", status: 404 });
   }
-  console.log(playlist.songs);
   const songs = await Song.find({ _id: { $in: playlist.songs } });
   if (!songs) {
     return Promise.reject({ message: "Songs not found", status: 404 });

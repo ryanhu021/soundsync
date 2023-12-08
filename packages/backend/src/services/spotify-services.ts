@@ -206,12 +206,14 @@ export const spotifyImport = async (
           }))
           .filter((track) => track.providerUrl)
       );
-      length = nextTracks.body.items.length;
+      length += nextTracks.body.items.length;
       hasNext = !!nextTracks.body.next;
     }
 
     // convert tracks to Song objects
     const songs = await Promise.all(tracks.map((track) => getSong(track)));
+    console.log(songs.map((song) => song.name));
+    console.log(songs.length);
 
     // create playlist in db
     const newPlaylist = await createPlaylist(playlistName, user);
