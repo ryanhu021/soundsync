@@ -8,10 +8,10 @@ type SpotifyImportProps = {
 export default function SpotifyImport(props: SpotifyImportProps) {
   const handleSubmit = () => {
     if (props.getPlaylistUrl()) {
-      const playlistUrl = new URL(props.getPlaylistUrl());
-      const playlistUrlNoParams = playlistUrl.origin + playlistUrl.pathname;
       fetch(
-        `${process.env.REACT_APP_SERVER_URL}/oauth/spotify?state=${playlistUrlNoParams}&type=import`,
+        `${
+          process.env.REACT_APP_SERVER_URL
+        }/oauth/spotify?state=${props.getPlaylistUrl()}&type=import`,
         {
           method: "GET",
           credentials: "include",
