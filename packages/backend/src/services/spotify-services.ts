@@ -162,6 +162,16 @@ export const spotifyExport = async (
   }
 };
 
+const getPlaylistIdFromUrl = (url: string): string | null => {
+  const urlObj = new URL(url);
+  const pathSegments: string[] = urlObj.pathname.split("/");
+  const trackIdIndex: number = pathSegments.indexOf("playlist");
+  if (trackIdIndex !== -1 && trackIdIndex < pathSegments.length - 1) {
+    return pathSegments[trackIdIndex + 1];
+  }
+  return null;
+};
+
 export const spotifyImport = async (
   user: UserContext,
   token: string,
@@ -172,7 +182,7 @@ export const spotifyImport = async (
     await authorizeUser(token);
 
     // get playlist ID from URL
-    const playlistId = playlistUrl.split("/").pop();
+    const playlistId = getPlaylistIdFromUrl(playlistUrl);
     if (!playlistId) {
       throw new Error("Invalid playlist URL");
     }

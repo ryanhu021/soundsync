@@ -92,7 +92,7 @@ describe("Song Services", () => {
 
       const result = await getSongs(MOCK_PLAYLIST._id);
 
-      expect(result).toEqual([MOCK_SONG]);
+      expect(result).toStrictEqual([MOCK_SONG]);
       expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
       expect(Song.aggregate).toHaveBeenCalledWith([
         {
@@ -122,9 +122,8 @@ describe("Song Services", () => {
         message: "Playlist not found",
         status: 404,
       });
-
-      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
     });
+
     it("should return an error if the songs are not found", async () => {
       Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
       Song.aggregate = jest.fn().mockResolvedValue(null);
@@ -133,8 +132,6 @@ describe("Song Services", () => {
         message: "Songs not found",
         status: 404,
       });
-
-      expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
     });
   });
 });

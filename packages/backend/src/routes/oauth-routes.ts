@@ -20,11 +20,16 @@ router.get("/spotify", auth, async (req, res) => {
 });
 
 router.get("/deezer", auth, async (req, res) => {
-  if (!req.query.playlistId || typeof req.query.playlistId !== "string") {
-    res.status(400).send({ error: "Missing State Parameter" });
+  if (
+    !req.query.state ||
+    typeof req.query.state !== "string" ||
+    !req.query.type ||
+    typeof req.query.type !== "string"
+  ) {
+    res.status(400).send({ error: "Missing state or type Parameter" });
     return;
   }
-  res.send({ url: deezerAuthUrl(req.query.playlistId) });
+  res.send({ url: deezerAuthUrl(req.query.state, req.query.type) });
 });
 
 router.get("/deezer/token", async (req, res) => {

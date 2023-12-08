@@ -102,7 +102,7 @@ export default function ViewPlaylist() {
       .then(async (res) => {
         if (res.status === 200) {
           const updated = await res.json();
-          setSongs(await getSongs(updated.songs));
+          setSongs(await getSongs(playlist._id));
           setPlaylist(updated);
         } else {
           setError("Error adding song");
@@ -132,7 +132,7 @@ export default function ViewPlaylist() {
         if (res.status === 200) {
           const updated = await res.json();
           setPlaylist(updated);
-          setSongs(await getSongs(updated.songs));
+          setSongs(await getSongs(playlist._id));
         } else {
           setError("Error deleting song");
         }

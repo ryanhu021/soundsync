@@ -8,7 +8,7 @@ type DeezerExportProps = {
 export default function DeezerExport(props: DeezerExportProps) {
   const handleSubmit = () => {
     fetch(
-      `${process.env.REACT_APP_SERVER_URL}/oauth/deezer?playlistId=${props.playlistId}`,
+      `${process.env.REACT_APP_SERVER_URL}/oauth/deezer?state=${props.playlistId}&type=export`,
       {
         method: "GET",
         credentials: "include",

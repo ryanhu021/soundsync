@@ -3,6 +3,7 @@ import { Container, Form, Button } from "react-bootstrap";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { BackLink } from "../components/back-link";
+import DeezerImport from "../components/deezer-import";
 import "../component-styles/create-playlist.css";
 import SpotifyImport from "../components/spotify-import";
 
@@ -61,6 +62,7 @@ export default function CreatePlaylist() {
         </Form>
         <div className="d-flex justify-content-around pb-4">
           <SpotifyImport getPlaylistUrl={() => getValues("name")} />
+          <DeezerImport getPlaylistUrl={() => getValues("name")} />
         </div>
         <p>{error}</p>
       </div>

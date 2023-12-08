@@ -1,6 +1,12 @@
 import axios from "axios";
 import { Playlist } from "../models/playlist-model";
 import { Song } from "../models/song-model";
+import {
+  createPlaylist,
+  updatePlaylistByID,
+} from "../services/playlist-services";
+import { UserContext } from "../util/auth";
+import { getSong } from "./song-services";
 
 type Track = {
   name: string;
@@ -29,6 +35,16 @@ const getSongIdFromUrl = (url: string): string | null => {
   return trackIndex !== -1 && pathSegments.length > trackIndex + 1
     ? pathSegments[trackIndex + 1]
     : null;
+};
+
+export const getPlaylistIdFromUrl = (url: string): string | null => {
+  const urlObj = new URL(url);
+  const pathSegments: string[] = urlObj.pathname.split("/");
+  const trackIdIndex: number = pathSegments.indexOf("playlist");
+  if (trackIdIndex !== -1 && trackIdIndex < pathSegments.length - 1) {
+    return pathSegments[trackIdIndex + 1];
+  }
+  return null;
 };
 
 const getRedirectLink = async (url: string): Promise<string> => {
@@ -67,12 +83,12 @@ export const deezerUrlSearch = async (url: string): Promise<Track> => {
   }
 };
 
-export const deezerAuthUrl = (id: string): string => {
+export const deezerAuthUrl = (state: string, type: string): string => {
   return (
     `https://connect.deezer.com/oauth/auth.php?app_id=${process.env.DEEZER_APP_ID}` +
     `&redirect_uri=${redirectUri}` +
     `&perms=${scopes}` +
-    `&state=${id}`
+    `&state=${state},${type}`
   );
 };
 
@@ -127,7 +143,7 @@ const getTrackUriFromSong = async (song: Song): Promise<string | null> => {
       },
     }
   );
-  if (searchResponse.data.data.length) {
+  if (searchResponse.data.data?.length) {
     return `${searchResponse.data.data[0].id}`;
   }
 
@@ -187,6 +203,49 @@ export const deezerExport = async (
       userId
     );
     return { url: playlistUrl, count: tracks.length };
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
+};
+
+export const deezerImport = async (
+  user: UserContext,
+  token: string,
+  playlistUrl: string
+): Promise<string> => {
+  try {
+    const userId = await getUserId(token);
+    if (!userId) {
+      throw new Error("User ID not found");
+    }
+    const playlistId = getPlaylistIdFromUrl(playlistUrl);
+    if (!playlistId) {
+      throw new Error("Invalid playlist URL");
+    }
+
+    const response = await axios.get(
+      `https://api.deezer.com/playlist/${playlistId}?access_token=${token}`
+    );
+    if (response.data.error) {
+      throw new Error("Playlist not found");
+    }
+
+    const tracks: Track[] = [];
+    tracks.push(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ...response.data.tracks.data.map((item: any) => ({
+        name: item.title,
+        artist: item.artist.name,
+        album: item.album.title,
+        providerUrl: `https://deezer.com/track/${item.id}`,
+        imageUrl: item.album.cover_big,
+      }))
+    );
+    const songs = await Promise.all(tracks.map((track) => getSong(track)));
+    const newPlaylist = await createPlaylist(response.data.title, user);
+    await updatePlaylistByID(newPlaylist._id, user, undefined, songs);
+    return newPlaylist._id;
   } catch (error) {
     console.error(error);
     return Promise.reject(error);

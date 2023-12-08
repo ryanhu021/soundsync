@@ -2,8 +2,8 @@ import {
   spotifyApi,
   spotifyAuthUrl,
   spotifyExport,
-  spotifySongFetch,
   spotifyImport,
+  spotifySongFetch,
 } from "../../src/services/spotify-services";
 import { Song } from "../../src/models/song-model";
 import { Playlist } from "../../src/models/playlist-model";
@@ -309,69 +309,6 @@ describe("Spotify Services", () => {
   });
 
   describe("spotifyImport", () => {
-    // export const spotifyImport = async (
-    //     user: UserContext,
-    //     token: string,
-    //     playlistUrl: string
-    // ): Promise<string> => {
-    //   try {
-    //     // authorize user
-    //     await authorizeUser(token);
-    //
-    //     // get playlist ID from URL
-    //     const playlistId = playlistUrl.split("/").pop();
-    //     if (!playlistId) {
-    //       throw new Error("Invalid playlist URL");
-    //     }
-    //
-    //     // fetch playlist
-    //     const playlist = await spotifyApi.getPlaylist(playlistId);
-    //     if (playlist.statusCode !== 200) {
-    //       throw new Error("Failed to fetch playlist");
-    //     }
-    //     const playlistName = playlist.body.name;
-    //
-    //     // fetch tracks
-    //     const tracks: Track[] = [];
-    //     let hasNext = true;
-    //     while (hasNext) {
-    //       const nextTracks = await spotifyApi.getPlaylistTracks(playlistId, {
-    //         offset: tracks.length,
-    //       });
-    //       if (nextTracks.statusCode !== 200) {
-    //         throw new Error("Failed to fetch playlist");
-    //       }
-    //       tracks.push(
-    //           ...nextTracks.body.items.map((item) => ({
-    //             name: item.track?.name || "",
-    //             artist: item.track?.artists[0].name || "",
-    //             album: item.track?.album.name || "",
-    //             providerUrl: item.track?.external_urls.spotify || "",
-    //             imageUrl: item.track?.album.images[0].url || "",
-    //           }))
-    //       );
-    //       hasNext = !!nextTracks.body.next;
-    //     }
-    //
-    //     // convert tracks to Song objects
-    //     const songs = await Promise.all(tracks.map((track) => getSong(track)));
-    //
-    //     // create playlist in db
-    //     const newPlaylist = await createPlaylist(playlistName, user);
-    //     await updatePlaylistByID(
-    //         newPlaylist._id,
-    //         user,
-    //         undefined,
-    //         songs.map((song) => song._id)
-    //     );
-    //
-    //     return newPlaylist._id;
-    //   } catch (error) {
-    //     console.error(error);
-    //     return Promise.reject(error);
-    //   }
-    // };
-
     it("should import a playlist from Spotify", async () => {
       MOCK_API.getPlaylistTracks
         .mockResolvedValueOnce(MOCK_GET_PLAYLIST_TRACKS_RESPONSE)
@@ -380,7 +317,7 @@ describe("Spotify Services", () => {
       const result = await spotifyImport(
         MOCK_USER,
         "mock-token",
-        MOCK_SPOTIFY_PROVIDER_URL
+        "https://open.spotify.com/playlist/123"
       );
 
       expect(result).toEqual(MOCK_PLAYLIST._id);
@@ -393,14 +330,28 @@ describe("Spotify Services", () => {
     });
 
     await expect(
-      spotifyImport(MOCK_USER, "mock-token", MOCK_SPOTIFY_PROVIDER_URL)
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
     ).rejects.toThrow(new Error("Authorization failed"));
   });
 
   it("should throw an error if playlist URL is invalid", async () => {
     await expect(spotifyImport(MOCK_USER, "mock-token", "")).rejects.toThrow(
-      new Error("Invalid playlist URL")
+      new Error("Invalid URL")
     );
+  });
+
+  it("should throw an error if playlist URL has no id", async () => {
+    await expect(
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist"
+      )
+    ).rejects.toThrow(new Error("Invalid playlist URL"));
   });
 
   it("should throw an error if playlist fails to fetch", async () => {
@@ -409,7 +360,11 @@ describe("Spotify Services", () => {
     });
 
     await expect(
-      spotifyImport(MOCK_USER, "mock-token", MOCK_SPOTIFY_PROVIDER_URL)
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
     ).rejects.toThrow(new Error("Failed to fetch playlist"));
   });
 
@@ -419,7 +374,11 @@ describe("Spotify Services", () => {
     });
 
     await expect(
-      spotifyImport(MOCK_USER, "mock-token", MOCK_SPOTIFY_PROVIDER_URL)
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
     ).rejects.toThrow(new Error("Failed to fetch playlist"));
   });
 
@@ -429,7 +388,11 @@ describe("Spotify Services", () => {
     );
 
     await expect(
-      spotifyImport(MOCK_USER, "mock-token", MOCK_SPOTIFY_PROVIDER_URL)
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
     ).rejects.toThrow(new Error("Failed to convert song"));
   });
 
@@ -439,7 +402,11 @@ describe("Spotify Services", () => {
     );
 
     await expect(
-      spotifyImport(MOCK_USER, "mock-token", MOCK_SPOTIFY_PROVIDER_URL)
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
     ).rejects.toThrow(new Error("Failed to create playlist"));
   });
 
@@ -449,7 +416,11 @@ describe("Spotify Services", () => {
     );
 
     await expect(
-      spotifyImport(MOCK_USER, "mock-token", MOCK_SPOTIFY_PROVIDER_URL)
+      spotifyImport(
+        MOCK_USER,
+        "mock-token",
+        "https://open.spotify.com/playlist/123"
+      )
     ).rejects.toThrow(new Error("Failed to update playlist"));
   });
 
@@ -477,7 +448,7 @@ describe("Spotify Services", () => {
     const result = await spotifyImport(
       MOCK_USER,
       "mock-token",
-      MOCK_SPOTIFY_PROVIDER_URL
+      "https://open.spotify.com/playlist/123"
     );
 
     expect(result).toEqual(MOCK_PLAYLIST._id);
@@ -498,7 +469,7 @@ describe("Spotify Services", () => {
     const result = await spotifyImport(
       MOCK_USER,
       "mock-token",
-      MOCK_SPOTIFY_PROVIDER_URL
+      "https://open.spotify.com/playlist/123"
     );
 
     expect(result).toEqual(MOCK_PLAYLIST._id);
