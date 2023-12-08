@@ -88,11 +88,11 @@ describe("Song Services", () => {
   describe("getSongs", () => {
     it("should return the songs in the playlist", async () => {
       Playlist.findById = jest.fn().mockResolvedValue(MOCK_PLAYLIST);
-      Song.aggregate = jest.fn().mockResolvedValue(MOCK_SONG);
+      Song.aggregate = jest.fn().mockResolvedValue([MOCK_SONG]);
 
       const result = await getSongs(MOCK_PLAYLIST._id);
 
-      expect(result).toBe(MOCK_SONG);
+      expect(result).toStrictEqual([MOCK_SONG]);
       expect(Playlist.findById).toHaveBeenCalledWith(MOCK_PLAYLIST._id);
       expect(Song.aggregate).toHaveBeenCalledWith([
         {

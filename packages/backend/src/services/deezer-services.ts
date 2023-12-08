@@ -220,6 +220,9 @@ export const deezerImport = async (
       throw new Error("User ID not found");
     }
     const playlistId = getPlaylistIdFromUrl(playlistUrl);
+    if (!playlistId) {
+      throw new Error("Invalid playlist URL");
+    }
 
     const response = await axios.get(
       `https://api.deezer.com/playlist/${playlistId}?access_token=${token}`
@@ -228,10 +231,7 @@ export const deezerImport = async (
       throw new Error("Playlist not found");
     }
 
-    const newPlaylist = await createPlaylist(response.data.title, user);
-
     const tracks: Track[] = [];
-
     tracks.push(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...response.data.tracks.data.map((item: any) => ({
@@ -243,6 +243,7 @@ export const deezerImport = async (
       }))
     );
     const songs = await Promise.all(tracks.map((track) => getSong(track)));
+    const newPlaylist = await createPlaylist(response.data.title, user);
     await updatePlaylistByID(newPlaylist._id, user, undefined, songs);
     return newPlaylist._id;
   } catch (error) {
