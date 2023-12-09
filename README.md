@@ -1,3 +1,8 @@
+[![build](https://github.com/ryanhu021/soundsync/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/ryanhu021/soundsync/actions/workflows/build.yml)
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9efdc130-5f01-4c96-9a0c-caedfd8c7619/deploy-status)](https://app.netlify.com/sites/soundsync/deploys)
+![Render Status](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fsoundsync-status.onrender.com%2Fsrv-cks47cg5vl2c73d3hd70&query=%24.status&style=flat-square&logo=render&label=render)
+
+
 # SoundSync - CSC307 Team Project
 
 ## Product Vision
@@ -9,8 +14,7 @@ Our [Figma story board](https://www.figma.com/file/ll44GHS0V2ezEDmyTDPjtt/SoundS
 Last edited 11/3/2023.
 
 ## Data Model
-Our [Data Model](https://www.figma.com/file/SAZraI6ZDJNHtaEtsXtMEx/SoundSync-Data-Model?type=whiteboard&t=feJ6p116Fiiu7WJU-0).  
-Last edited 12/8/2023.
+[Data Model](docs/data-model.md)
 
 ## Development Environment Set Up:
 - Setup:
